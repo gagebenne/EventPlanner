@@ -57,7 +57,7 @@ def show_event_get(event_id):
     event_timeslots = event_admin[0].timeslots
     event_timeslots_times = []
     for t in event_timeslots:
-        event_timeslots_times.append(t.time)
+        event_timeslots_times.append(t.datetime) #TEMPORARY FIX!!!
 
     participants = list(event.participants)
 
