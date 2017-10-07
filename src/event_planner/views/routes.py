@@ -1,6 +1,7 @@
 from .. import db, models, app
 from flask import flash, redirect, abort, render_template, url_for, request
 from datetime import date as dt, time
+from datetime import datetime
 from .. import utils
 from . import forms
 
@@ -27,9 +28,9 @@ def new_post():
         event = models.Event(
             form.eventname.data,
             form.eventdescription.data,
-            form.date.data
         )
         db.session.add(event)
+        db.session.flush()
         admin = models.Participant(
             form.adminname.data,
             event,
@@ -39,8 +40,11 @@ def new_post():
         for timeslot in form.timeslots:
             val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
             if val is True:
-                t = models.Timeslot(timeslot, admin)
+                t = models.Timeslot(datetime.combine(datetime.today().date(),timeslot), admin)
                 db.session.add(t)
+        for entry in form.tasks.entries:
+            task = models.Task(entry.data['task'], False, None, event.id)
+            db.session.add(task)
         db.session.commit()
         return redirect(url_for("index"))
     else:
@@ -56,7 +60,7 @@ def show_event_get(event_id):
     event_timeslots = event_admin[0].timeslots
     event_timeslots_times = []
     for t in event_timeslots:
-        event_timeslots_times.append(t.time)
+        event_timeslots_times.append(t.datetime) #TEMPORARY FIX!!!
 
     participants = list(event.participants)
 
@@ -72,7 +76,7 @@ def show_event_post(event_id=None):
     #Get event info
     event = get_event(event_id)
     admin_timeslots = event.admin.timeslots
-    timeslot_times = [timeslot.time for timeslot in admin_timeslots]
+    timeslot_times = [timeslot.datetime for timeslot in admin_timeslots] #TEMPORARY FIX!!!
     form_type = forms.ParticipantForm.with_timeslots(timeslot_times)
     form = form_type(request.form)
     if form.validate():

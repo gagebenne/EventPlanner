@@ -7,9 +7,16 @@
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
     <h2>{{ event['description'] }}</h2>
-    <h4>{{ event['date'] }}</h4>
+    <!--<h4>{{ event['date'] }}</h4>--> <!--TEMPORARY FIX!!!-->
     <h5>Created by: {{ event['admin_name'] }}</h5>
     </div>
+    <div>
+      <h5>Tasks</h5>
+        {% for t in event.tasks %}
+            <p>T: {{ t.task }}</p>
+        {% endfor %}
+    </div>
+        
 </div>
 
     <div class="participanttable">
@@ -17,10 +24,10 @@
             <div class="timeslot-display">
                     {% for t in event_timeslots %}
                         <div class="timeslot" style="height:auto;width:auto;">
-                            <p><strong>{{ t.time.strftime("%I:%M %p") }}</strong></p>
+                            <p><strong>{{ t.datetime.strftime("%I:%M %p") }}</strong></p> <!--TEMPORARY FIX!!!-->
                             {% for p in participants %}
                                 {% for pt in p.timeslots %}
-                                    {% if pt.time == t.time %}
+                                    {% if pt.datetime == t.datetime %} <!--TEMPORARY FIX!!!-->
                                         <p>{{ p.name }}</p>
                                     {% endif %}
                                 {% endfor %}
