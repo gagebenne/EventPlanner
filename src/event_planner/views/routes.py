@@ -43,8 +43,8 @@ def new_post():
                 t = models.Timeslot(datetime.combine(datetime.today().date(),timeslot), admin)
                 db.session.add(t)
         for entry in form.tasks.entries:
-            this = models.Task(entry.data['task'], False, None, event.id)
-            db.session.add(this)
+            task = models.Task(entry.data['task'], False, None, event.id)
+            db.session.add(task)
         db.session.commit()
         return redirect(url_for("index"))
     else:
