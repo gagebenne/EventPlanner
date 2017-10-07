@@ -46,9 +46,9 @@ class Task(db.Model):
     
     **Related Model:** `event_planner.models.Participant`
     """
-    def __init__(self, task, is_assigned, participant, event):
+    def __init__(self, task, is_assigned, part_id, event_id):
         """Creates a new `Task` instance"""
         self.task = task
         self.is_assigned = is_assigned
-        self.participant = participant
-        self.event = event
+        self.part_id = part_id
+        self.event_id = event_id
