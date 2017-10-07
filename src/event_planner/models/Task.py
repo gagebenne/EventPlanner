@@ -28,6 +28,12 @@ class Task(db.Model):
     
     **Type:** TEXT
     """
+    is_assigned = db.Column(db.Boolean)
+    """
+    Whether the `Task` has been assigned to participant or not
+    
+    **Type:** BOOLEAN
+    """
     participant = db.relationship("Participant")
     """
     Relationship to the `Participant` that this `Task` belongs to
@@ -43,5 +49,6 @@ class Task(db.Model):
     def __init__(self, task, participant, event):
         """Creates a new `Task` instance"""
         self.task = task
+        self.is_assigned = is_assigned
         self.participant = participant
         self.event = event
