@@ -7,7 +7,7 @@
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
     <h2>{{ event['description'] }}</h2>
-    <h4>{{ event['date'] }}</h4>
+    <!--<h4>{{ event['date'] }}</h4>--> <!--TEMPORARY FIX!!!-->
     <h5>Created by: {{ event['admin_name'] }}</h5>
     </div>
 </div>
@@ -17,7 +17,7 @@
             <div class="timeslot-display">
                     {% for t in event_timeslots %}
                         <div class="timeslot" style="height:auto;width:auto;">
-                            <p><strong>{{ t.time.strftime("%I:%M %p") }}</strong></p>
+                            <p><strong>{{ t.datetime.strftime("%I:%M %p") }}</strong></p> <!--TEMPORARY FIX!!!-->
                             {% for p in participants %}
                                 {% for pt in p.timeslots %}
                                     {% if pt.time == t.time %}
