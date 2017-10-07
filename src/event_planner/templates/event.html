@@ -20,7 +20,7 @@
                             <p><strong>{{ t.datetime.strftime("%I:%M %p") }}</strong></p> <!--TEMPORARY FIX!!!-->
                             {% for p in participants %}
                                 {% for pt in p.timeslots %}
-                                    {% if pt.time == t.time %}
+                                    {% if pt.datetime == t.datetime %} <!--TEMPORARY FIX!!!-->
                                         <p>{{ p.name }}</p>
                                     {% endif %}
                                 {% endfor %}

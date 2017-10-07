@@ -76,7 +76,7 @@ def show_event_post(event_id=None):
     #Get event info
     event = get_event(event_id)
     admin_timeslots = event.admin.timeslots
-    timeslot_times = [timeslot.time for timeslot in admin_timeslots]
+    timeslot_times = [timeslot.datetime for timeslot in admin_timeslots] #TEMPORARY FIX!!!
     form_type = forms.ParticipantForm.with_timeslots(timeslot_times)
     form = form_type(request.form)
     if form.validate():
