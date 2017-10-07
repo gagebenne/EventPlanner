@@ -2,7 +2,7 @@ import string
 from .. import db
 class Task(db.Model):
     """
-    Database model for a `Participant`'s `Timeslot`s
+    Database model for an `Event`'s `Task`s
     """
     id = db.Column(db.Integer, primary_key=True)
     """
@@ -16,9 +16,15 @@ class Task(db.Model):
     
     **Type:** INTEGER FOREIGN KEY
     """
+    event_id = db.Column(db.Integer, db.ForeignKey("event.id"))
+    """
+    The id of the `Event` that this `Task` belongs to
+    
+    **Type:** INTEGER FOREIGN KEY
+    """
     task = db.Column(db.Text)
     """
-    The `datetime` that this `Timeslot` started at
+    The name of the `Task`
     
     **Type:** TEXT
     """
@@ -28,7 +34,14 @@ class Task(db.Model):
     
     **Related Model:** `event_planner.models.Participant`
     """
-    def __init__(self, task, participant):
-        """Creates a new `Timeslot` instance"""
+    event = db.relationship("Event")
+    """
+    Relationship to the `Event` that this `Task` belongs to
+    
+    **Related Model:** `event_planner.models.Participant`
+    """
+    def __init__(self, task, participant, event):
+        """Creates a new `Task` instance"""
         self.task = task
         self.participant = participant
+        self.event = event
