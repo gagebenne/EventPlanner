@@ -57,7 +57,7 @@ class EventForm(Form):
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
     eventdescription = StringField("eventdescription", [Optional()])
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
-    tasks = FieldList(FormField(TaskForm), min_entries=2)
+    tasks = FieldList(FormField(TaskForm), min_entries=5)
     @staticmethod
     def with_timeslots(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
