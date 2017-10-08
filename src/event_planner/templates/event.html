@@ -15,8 +15,9 @@
             <p>T: {{ t.task }}</p>
         {% endfor %}
     </div>
-    <a href="/event/{{ event['id'] }}/newtask">Add Task</a>
-    <a href="/event/{{ event['id'] }}/respond">Join Event</a>
+    <button class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</button>
+	<br>
+    <button class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond">Join Event</button>
 </div>
 
     <div class="participanttable">
@@ -38,7 +39,7 @@
                         {% endfor %}
                     {% endfor %}
                     <br><br>
-                    <a href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</a>
+                    <button class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</button>
             </div>
         </div>
     </div>
