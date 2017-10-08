@@ -178,7 +178,7 @@ def create_dateslot(event_id):
                 db.session.add(t)
         db.session.commit()
 
-        return redirect(url_for("index"))
+        return redirect(url_for('show_event_get', event_id=event_id))
     else:
         return render_template("new_dateslot.html", form=form), 400
  
