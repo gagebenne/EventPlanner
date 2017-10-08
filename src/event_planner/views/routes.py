@@ -69,12 +69,11 @@ def show_event_get(event_id):
     #Get event by ID from DB and send to event view
     event = get_event(event_id) or abort(404)
     event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
-
     event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
     event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
     event_times = map((lambda x : x.time), event_timeslots)
     event_dateslots_times = event_times
-
+	
     participants = list(event.participants)
 
     form_type = forms.ParticipantForm.default_form(event_dateslots_times)

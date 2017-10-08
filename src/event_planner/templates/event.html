@@ -6,24 +6,17 @@
 <div class="container">
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
-    <h2>{{ event['description'] }}</h2>
-    <h5>Created by: {{ event['admin_name'] }}</h5>
+    <h2>{{ event['description'] if event['description'] else "No Description" }}</h2>
+    <h5>Created by: {% for p in event.participants %}
+		{% if p.is_admin %}
+			{{ p.name }}</h5>
+			{%endif%}
+			{%endfor%}
     </div>
-    <div>
+    <div class="tasks">
       <h5>Tasks</h5>
         {% for t in event.tasks %}
-            <p>{{ t.task }} :
-            {% if t.is_assigned == True %}
-                {% for p in participants %}
-                    {% if t.part_id == p.id %}
-                        {{ p.name }}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            {% if t.is_assigned == False %}
-                Nobody is assigned...
-            {% endif %}
-          </p>
+            <p>{{ t.task }}: {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
         {% endfor %}
     </div>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
@@ -36,20 +29,38 @@
     <div class="participanttable">
         <div class="container">
             <div class="timeslot-display">
+					<!-- Test block because Mason's computer will not properly load data -->
+					<!-- <div class="date">
+						<h5><strong>wassup date</strong></h5>
+						<br>
+						<div class="timeslot" style="height:auto;width:auto;">
+							<p><strong>1:00pm</strong></p>
+							<p>Mason The Greatest fo all time who never once let up</p>
+							<p>Bill</p>
+						</div>
+						<div class="timeslot" style="height:auto;width:auto;">
+							<p><strong>2:00pm</strong></p>
+							<p>Mason</p>
+							<p>Bill</p>
+						</div>
+					</div> -->
                     {% for dateslot in event_dateslots %}
-                        <h5><strong>{{ dateslot.date }}</strong></h5>
-                        {% for timeslot in dateslot.timeslots %}
-                            <div class="timeslot" style="height:auto;width:auto;">
-                                <p><strong>{{ timeslot.time.strftime("%I:%M %p") }}</strong></p>
-                                {% for p in participants %}
-                                    {% for pt in p.timeslots %}
-                                        {% if pt.time == timeslot.time %}
-                                            <p>{{ p.name }}</p>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
+						<div class="date">
+	                        <h5><strong>{{ dateslot.date }}</strong></h5>
+							<br>
+	                        {% for timeslot in dateslot.timeslots %}
+	                            <div class="timeslot" style="height:auto;width:auto;">
+	                                <p><strong>{{ timeslot.time.strftime("%I:%M %p") }}</strong></p>
+	                                {% for p in participants %}
+	                                    {% for pt in p.timeslots %}
+	                                        {% if pt.time == timeslot.time %}
+	                                            <p>{{ p.name }}</p>
+	                                        {% endif %}
+	                                    {% endfor %}
+	                                {% endfor %}
+	                            </div>
+	                        {% endfor %}
+						</div>
                     {% endfor %}
                     <br><br>
                     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</a>
@@ -78,35 +89,5 @@
     </form>
 </div>
 </div>
-<script>
-    $(".date-picker").datepicker()
-    $(".24-hour-form").hide();
-    function showparticipantform() {
-        var x = document.getElementById('formshow');
-        if (x.style.display === 'none') {
-            x.style.display = 'block';
-        } else {
-            x.style.display = 'none';
-        }
-    }
-    $('.toggle-time-button').on('click', function(e){
-        e.preventDefault()
-        $('.24-hour-form').toggle()
-        $('.12-hour-form').toggle()
-    });
-    $('.timeslot-picker').selectable({
-        selected: function(event, ui){
-            $(ui.selected).addClass('active')
-            $(ui.selected).removeClass('selecting')
-            $(ui.selected).children('input').val('1')
-        },
-        unselected: function(event, ui){
-            $(ui.unselected).removeClass('active')
-            $(ui.unselected).removeClass('selecting')
-            $(ui.unselected).children('input').val('0')
-        },
-        selecting: function(event, ui){
-            $(ui.selecting).addClass('selecting')
-        }
-    });
+<script src="/static/timeslot_picker.js"></script>
 </script>
