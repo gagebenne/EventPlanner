@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField
+from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, SelectField
 from wtforms.validators import DataRequired, Optional
 from wtforms.widgets import HiddenInput
 from .. import utils
@@ -74,18 +74,6 @@ class EventForm(Form):
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
 
-class ParticipantForm(Form):
-    """
-    `Form` used for creating new `Participant`s
-    """
-    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
-    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
-
-
-    @staticmethod
-    def default_form(timeslots=utils.all_timeslots()):
-        return with_timeslots(ParticipantForm, timeslots)
-
 class DateForm(Form):
     """
     `Form` used for creating new `Date`s
@@ -95,3 +83,24 @@ class DateForm(Form):
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(DateForm, timeslots)
+
+class ParticipantForm(Form):
+    """
+    `Form` used for creating new `Participant`s
+    """
+    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    # date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+    date = SelectField("date", [DataRequired('Date is empty or invalid')], choices=[])
+
+
+    @staticmethod
+    def default_form(timeslots=utils.all_timeslots()):
+        return with_timeslots(ParticipantForm, timeslots)
+
+# class DateResponseForm(Form):
+
+#     date = 
+
+#     @staticmethod
+#     def default_form(timeslots=utils.all_timeslots()):
+#         return with_timeslots(DateResponseForms, timeslots)
