@@ -42,13 +42,19 @@ class Event(db.Model):
     **Related Model:** `event_planner.models.Participant`
     """
 
+    tasks = db.relationship("Task")
+    """
+    Relationship to the tasks of this event
+
+    **Related Model:** `event_planner.models.Task`
+    """
     @property
     def admin(self):
         #TODO: Make this a query, not a for loop
         for participant in self.participants:
             if participant.is_admin:
                 return participant
-                
+              
     def __init__(self, title, description):
         """
         Creates a new `Event` instance
