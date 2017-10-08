@@ -133,8 +133,28 @@ def new_task_post(event_id):
         return render_template("/event/<event_id>/newtask", form=form, event=event), 400
 
 
+@app.route("/event/<event_id>/respond", methods=['GET'])
+def new_responce(event_id):
+    return render_template('respond.html', form=form.ParticipantForm())
+
+@app.route("/event/<event_id>/respond", methods=['POST'])
+def create_responce(event_id):
+
+    event = get_event(event_id)
+    form = empty_dateform(request.form)
+    admin = event.admin
+
+    if form.validate():
+
+        # form
+        db.session.commit()
+
+        return redirect(url_for('show_event_get', event_id=event_id))
+    else:
+        return render_template("/event/<event_id>/respond", form=form, event=event), 400
+ 
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
-def new_dateslot(event_id):
+def new_res(event_id):
     return render_template('new_dateslot.html', form=empty_dateform())
 
 @app.route("/event/<event_id>/new_dateslot", methods=['POST'])
