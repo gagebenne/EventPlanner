@@ -6,7 +6,7 @@
 <div class="container">
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
-    <h2>{{ event['description'] }}</h2>
+    <h2>{{ event['description'] if event['description'] else "No Description" }}</h2>
     <h5>Created by: {% for p in event.participants %}
 		{% if p.is_admin %}
 			{{ p.name }}</h5>

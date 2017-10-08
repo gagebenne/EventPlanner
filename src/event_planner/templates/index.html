@@ -20,7 +20,7 @@
                     <h4><b>{{ event['title'] }}</b></h4>
                     <p>{{ event['date'] }}</p>
                     <div class="container">
-                    <p> {{ event['description'] }} </p>
+                    <p> {{ event['description'] if event['description'] else "No Description" }} </p>
                     <p> Created by: {{ event.admin['name'] }}</p>
                     </div>
             </div>
