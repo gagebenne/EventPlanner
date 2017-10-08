@@ -59,7 +59,7 @@ class TaskForm(Form):
     """
     `Form` used for creating new `Task`s
     """
-    name = StringField("taskname", [DataRequired(message='Task cannot be empty')])
+    name = StringField("taskname", [DataRequired(message='Task cannot be empty'), validators.Length(max=20, message='Task name cannot exceed 20 characters')])
 
 def validate_timeslots(form, field):
     displayError = True
