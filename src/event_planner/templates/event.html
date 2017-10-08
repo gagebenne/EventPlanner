@@ -7,12 +7,16 @@
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
     <h2>{{ event['description'] }}</h2>
-    <h5>Created by: {{ event['admin_name'] }}</h5>
+    <h5>Created by: {% for p in event.participants %}
+		{% if p.is_admin %}
+			{{ p.name }}</h5>
+			{%endif%}
+			{%endfor%}
     </div>
     <div class="tasks">
       <h5>Tasks</h5>
         {% for t in event.tasks %}
-            <p>{{ t.task }}: {{t.participant.name if t.is_assigned else "Unclaimed"}}</p>
+            <p>{{ t.task }}: {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
         {% endfor %}
     </div>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
