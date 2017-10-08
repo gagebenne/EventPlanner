@@ -2,36 +2,34 @@
 {% from 'macros.html' import display_errors, input_field %}
 {{ display_errors(form) }}
 <div class="container text-center">
-<h1>Create a New Event</h1>
-<button class="btn btn-info toggle-time-button my-3 btn-sm">Toggle time format</button>
-
-    <div class="container">
+    <h1>Respond</h1>
+    <div id="formshow">
         <form class="col-sm-10 mx-auto" method="POST">
-            {{ input_field(form, 'eventname', 'Event Name') }}
-            {{ input_field(form, 'eventdescription', 'Event Description') }}
-            {{ input_field(form, 'adminname', 'Your Name') }}
-            {{ input_field(form, 'date', 'Event Date') }}
-            <p>Time slots are 30 minutes long and begin at indicated time.</p>
-            <p>Hold Ctrl or Command(Mac) to select multiple time slots.</p>
-            <div class="timeslot-picker">
-                {% for timeslot in form.timeslots %}
-                    {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
-                {% endfor %}
-            </div>
-            <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
+            <div class="container">
+                {{ input_field(form, 'participantname', 'Your Name') }}
+                <div class="timeslot-picker">
+                    {% for dateslot in event_dateslots %}
+                        <h5><strong>{{ dateslot.date }}</strong></h5>
+                        {% for timeslot in dateslot.timeslots %}
+                            {{ form["slot_%s" % timeslot.time.strftime("%H%M")]()|safe }}
+                        {% endfor %}  
+                    {% endfor %}
+                </div>
+          </div>
+              <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
         </form>
     </div>
-
-</div>
 <script>
     $("#new").addClass('active')
     $(".date-picker").datepicker()
     $(".24-hour-form").hide();
+
     $('.toggle-time-button').on('click', function(e){
         e.preventDefault()
         $('.24-hour-form').toggle()
         $('.12-hour-form').toggle()
     });
+
     $('.timeslot-picker').selectable({
         selected: function(event, ui){
             $(ui.selected).addClass('active')

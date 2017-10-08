@@ -1,0 +1,15 @@
+{% include 'header.html' %}
+{% from 'macros.html' import display_errors, input_field %}
+{{ display_errors(form) }}
+<div class="container text-center">
+<h1>Create a New Event Task</h1>
+
+    <div class="container">
+        <form class="col-sm-10 mx-auto" method="POST">
+            {{ input_field(form, 'name', 'Task Name') }}
+            <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
+        </form>
+    </div>
+    
+</div>
+{% include 'footer.html' %}

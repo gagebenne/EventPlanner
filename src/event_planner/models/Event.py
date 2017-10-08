@@ -6,36 +6,42 @@ class Event(db.Model):
     """
     Database model for events
     """
+
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key for the database
     
     **Type:** INTEGER PRIMARY KEY
     """
+
     title = db.Column(db.Text)
     """
     The title of this event
 
     **Type:** TEXT
     """
+
     description = db.Column(db.Text)
     """
     The description of this event
 
     **Type:** TEXT
     """
+
     admin_link = db.Column(db.Text)
     """
     The *magic* code that authenicates the admin for this event
 
     **Type:** TEXT
     """
+
     participants = db.relationship("Participant")
     """
     Relationship to the participants of this event
 
     **Related Model:** `event_planner.models.Participant`
     """
+
     tasks = db.relationship("Task")
     """
     Relationship to the tasks of this event
@@ -48,6 +54,7 @@ class Event(db.Model):
         for participant in self.participants:
             if participant.is_admin:
                 return participant
+              
     def __init__(self, title, description):
         """
         Creates a new `Event` instance
