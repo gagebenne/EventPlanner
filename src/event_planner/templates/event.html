@@ -7,7 +7,6 @@
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
     <h2>{{ event['description'] }}</h2>
-    <!--<h4>{{ event['date'] }}</h4>--> <!--TEMPORARY FIX!!!-->
     <h5>Created by: {{ event['admin_name'] }}</h5>
     </div>
     <div>
@@ -17,7 +16,7 @@
         {% endfor %}
     </div>
     <a href="/event/{{ event['id'] }}/newtask">Add Task</a>
-    <a href="/event/{{ event['id'] }}/newtask">Join Event</a>
+    <a href="/event/{{ event['id'] }}/respond">Join Event</a>
 </div>
 
     <div class="participanttable">
