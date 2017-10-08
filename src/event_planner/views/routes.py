@@ -30,7 +30,7 @@ def new_post():
             form.eventdescription.data,
         )
         db.session.add(event)
-        db.session.flush()
+        # db.session.flush()
         admin = models.Participant(
             form.adminname.data,
             event,
@@ -42,9 +42,9 @@ def new_post():
             if val is True:
                 t = models.Timeslot(datetime.combine(datetime.today().date(),timeslot), admin)
                 db.session.add(t)
-        for entry in form.tasks.entries:
-            task = models.Task(entry.data['task'], False, None, event.id)
-            db.session.add(task)
+        # for entry in form.tasks.entries:
+        #     task = models.Task(entry.data['task'], False, None, event.id)
+        #     db.session.add(task)
         db.session.commit()
         return redirect(url_for("index"))
     else:
