@@ -50,12 +50,22 @@ def with_timeslots(form_type, timeslots):
 class TaskForm(Form):
     task = StringField("taskname")
 
+def validate_timeslots(form, field):
+    displayError = True
+    for timeslot in form.timeslots:
+        val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+        if val is True:
+            displayError = False
+            break
+    if displayError:
+        raise ValidationError('Must select at least one timeslot')
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
     """
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
-    eventdescription = StringField("eventdescription", [Optional()])
+    eventdescription = StringField("eventdescription", [validate_timeslots]) #Calls timeslot validation
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
     tasks = FieldList(FormField(TaskForm), min_entries=5)
 
@@ -79,7 +89,30 @@ class ParticipantForm(Form):
     """
     `Form` used for creating new `Participant`s
     """
-    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    participantname = StringField("participantname")
+
+    def validate_participantname(form, field):
+        """
+        Does validation for participants, ie signing up for an event.
+        Note: This never dispays errors, since on hitting submit the page redirects.
+        However, the errors are raised, and it is prevented from being added.
+        Since timeslots is weird, we also do valiation for it here.
+        :param field: Params will be passed in automatically based on how validation is defined.
+        :return: If invalid, a validation error.
+        """
+        if field.data == '':
+            raise ValidationError('Participant Name cannot be empty')
+
+        #Also does validation for timeslots here, since there's no other place for it.
+        displayError = True
+        for timeslot in form.timeslots:
+            val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+            if val is True:
+                displayError = False
+                break
+        if displayError:
+            raise ValidationError('Must select at least one timeslot')
+
     @staticmethod
     def with_timeslots(timeslots=utils.all_timeslots()):
         return with_timeslots(ParticipantForm, timeslots)
