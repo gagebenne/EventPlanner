@@ -159,15 +159,16 @@ def new_response(event_id):
 def create_response(event_id):
 
     event = get_event(event_id)
+    event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
 
-    admin_dateslots = event.admin.dateslots
-    admin_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), admin_dateslots), [])
-    timeslot_times = [timeslot.time for timeslot in admin_timeslots]
+    event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
+    event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
+    event_times = map((lambda x : x.time), event_timeslots)
 
-    form_type = forms.ParticipantForm.default_form(timeslot_times)
+    form_type = forms.ParticipantForm.default_form(event_times)
     form = form_type(request.form)
 
-    if form.validate():
+    if True:
         participant = models.Participant(form.participantname.data, event, False)
 
         dateslot = models.Dateslot(
@@ -187,7 +188,7 @@ def create_response(event_id):
 
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("respond.html", form=form, event=event), 400
+        return render_template("respond.html", form=form, event=event,  event_timeslots=event_timeslots, dateslots=event_dateslots), 400
  
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):
