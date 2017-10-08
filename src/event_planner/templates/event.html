@@ -12,12 +12,25 @@
     <div>
       <h5>Tasks</h5>
         {% for t in event.tasks %}
-            <p>T: {{ t.task }}</p>
+            <p>{{ t.task }} :
+            {% if t.is_assigned == True %}
+                {% for p in participants %}
+                    {% if t.part_id == p.id %}
+                        {{ p.name }}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if t.is_assigned == False %}
+                Nobody is assigned...
+            {% endif %}
+          </p>
         {% endfor %}
     </div>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
 	<br>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond">Join Event</a>
+  <br>
+    <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respondtask">Join Event Task</a>
 </div>
 
     <div class="participanttable">
