@@ -4,7 +4,7 @@ from datetime import date as dt, time
 from datetime import datetime
 from .. import utils
 from . import forms
-from functools import reduce, map, filter
+from functools import reduce
 
 empty_form = forms.EventForm.default_form()
 empty_dateform = forms.DateForm.default_form()
