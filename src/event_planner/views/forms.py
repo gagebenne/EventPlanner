@@ -50,7 +50,6 @@ def with_timeslots(form_type, timeslots):
 class TaskForm(Form):
     task = StringField("taskname")
 
-
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -69,7 +68,6 @@ class EventForm(Form):
         for i in range (0,field.__len__()):
             if field.__getitem__(i).data == dict([('task','')]):
                 raise ValidationError('One or more tasks is empty')
-                break
 
 
     @staticmethod
