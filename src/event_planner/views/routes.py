@@ -2,8 +2,10 @@ from .. import db, models, app
 from flask import flash, redirect, abort, render_template, url_for, request
 from datetime import date as dt, time
 from datetime import datetime
+from dateutil import parser
 from .. import utils
 from . import forms
+from functools import reduce
 
 empty_form = forms.EventForm.default_form()
 empty_dateform = forms.DateForm.default_form()
@@ -72,14 +74,13 @@ def show_event_get(event_id):
     event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
     event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
     event_times = map((lambda x : x.time), event_timeslots)
-    event_dateslots_times = event_times
 
     participants = list(event.participants)
 
-    form_type = forms.ParticipantForm.default_form(event_dateslots_times)
+    form_type = forms.ParticipantForm.default_form(event_times)
     form = form_type()
 
-    return render_template('event_view.html', form=form, event=event, admin=event_admin, participants=participants, event_dateslots=event_dateslots, event_timeslots_times=event_dateslots_times)
+    return render_template('event_view.html', form=form, event=event, admin=event_admin, participants=participants, event_dateslots=event_dateslots)
 
 
 @app.route("/event/<event_id>", methods=['POST'])
@@ -140,19 +141,38 @@ def new_response(event_id):
     event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
     
     event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
+    event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
+    event_times = map((lambda x : x.time), event_timeslots)
 
-    return render_template('respond.html', form=empty_participantform(), event_dateslots=event_dateslots)
+    form_type = forms.ParticipantForm.default_form(event_times)
+    form = form_type()
+
+    dateslots = []
+    for dateslot in event_dateslots:
+        dateslots.append((dateslot.date,dateslot.date))
+
+    form.date.choices = dateslots
+
+    return render_template('respond.html', form=form, event_timeslots=event_timeslots, dateslots=event_dateslots)
 
 @app.route("/event/<event_id>/respond", methods=['POST'])
 def create_response(event_id):
 
     event = get_event(event_id)
-    form = forms.ParticipantForm(request.form)
+
+    admin_dateslots = event.admin.dateslots
+    admin_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), admin_dateslots), [])
+    timeslot_times = [timeslot.time for timeslot in admin_timeslots]
+
+    form_type = forms.ParticipantForm.default_form(timeslot_times)
+    form = form_type(request.form)
 
     if form.validate():
+        participant = models.Participant(form.participantname.data, event, False)
+
         dateslot = models.Dateslot(
-            form.date.data,
-            admin
+            parser.parse(form.date.data).date(),
+            participant
         )
         db.session.add(dateslot)
 
