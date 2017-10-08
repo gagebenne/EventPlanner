@@ -48,8 +48,8 @@ def with_timeslots(form_type, timeslots):
     return fresh_type
 
 class TaskForm(Form):
-    task = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
-    
+    task = StringField("Task Name:", [DataRequired(message='Task Name cannot be empty')])
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -57,7 +57,7 @@ class EventForm(Form):
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
     eventdescription = StringField("eventdescription", [Optional()])
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
-    tasks = FieldList(FormField(TaskForm), min_entries=5)
+    tasks = FieldList(FormField(TaskForm), min_entries=1)
     @staticmethod
     def with_timeslots(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
