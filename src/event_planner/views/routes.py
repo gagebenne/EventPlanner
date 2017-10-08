@@ -130,7 +130,7 @@ def new_task_post(event_id):
         db.session.commit()
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("/event/<event_id>/newtask", form=form, event=event), 400
+        return render_template("newtask.html", form=form, event_id=event_id), 400
 
 
 @app.route("/event/<event_id>/respond", methods=['GET'])
@@ -150,7 +150,7 @@ def create_response(event_id):
 
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("/event/<event_id>/respond", form=form, event=event), 400
+        return render_template("respond.html", form=form, event_id=event_id), 400
  
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):
