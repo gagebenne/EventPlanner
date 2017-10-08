@@ -27,13 +27,11 @@
     $("#new").addClass('active')
     $(".date-picker").datepicker()
     $(".24-hour-form").hide();
-
     $('.toggle-time-button').on('click', function(e){
         e.preventDefault()
         $('.24-hour-form').toggle()
         $('.12-hour-form').toggle()
     });
-
     $('.timeslot-picker').selectable({
         selected: function(event, ui){
             $(ui.selected).addClass('active')

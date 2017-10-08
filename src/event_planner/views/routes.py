@@ -4,9 +4,11 @@ from datetime import date as dt, time
 from datetime import datetime
 from .. import utils
 from . import forms
+from functools import reduce
 
 empty_form = forms.EventForm.default_form()
 empty_dateform = forms.DateForm.default_form()
+empty_participantform = forms.ParticipantForm.default_form()
 
 @app.route("/")
 def index():
@@ -65,9 +67,9 @@ def show_event_get(event_id):
     """ GET - user view of event"""
 
     #Get event by ID from DB and send to event view
-    event = get_event(event_id) or abort(404) 
+    event = get_event(event_id) or abort(404)
     event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
-    
+
     event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
     event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
     event_times = map((lambda x : x.time), event_timeslots)
@@ -102,7 +104,7 @@ def show_event_post(event_id=None):
              if val is True:
                 t = models.Timeslot(slot, participant)
                 db.session.add(t)
-                
+
         db.session.commit()
 
     return redirect(url_for('show_event_get', event_id=event_id))
@@ -118,23 +120,58 @@ def new_task_get(event_id):
 @app.route("/event/<event_id>/newtask", methods=['POST'])
 def new_task_post(event_id):
     """Creates a new event task and commits it to the db"""
-    
+
     form = forms.TaskForm(request.form)
     if form.validate():
         task = models.Task(
-            form.name.data, 
-            False, 
-            None, 
+            form.name.data,
+            False,
+            None,
             event_id)
         db.session.add(task)
         db.session.commit()
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("/event/<event_id>/newtask", form=form, event=event), 400
+        return render_template("newtask.html", form=form, event=event), 400
 
+
+@app.route("/event/<event_id>/respond", methods=['GET'])
+def new_response(event_id):
+    event = get_event(event_id) or abort(404)
+    event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
+
+    event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
+
+    return render_template('respond.html', form=empty_participantform(), event_dateslots=event_dateslots)
+
+@app.route("/event/<event_id>/respond", methods=['POST'])
+def create_response(event_id):
+
+    event = get_event(event_id)
+    form = forms.ParticipantForm(request.form)
+
+    if form.validate():
+        dateslot = models.Dateslot(
+            form.date.data,
+            admin
+        )
+        db.session.add(dateslot)
+
+        for timeslot in form.timeslots:
+            val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+            if val is True:
+                t = models.Timeslot(timeslot, dateslot)
+                db.session.add(t)
+
+        # form
+        db.session.commit()
+
+        return redirect(url_for('show_event_get', event_id=event_id))
+    else:
+        return render_template("respond.html", form=form, event=event), 400
 
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
-def new_dateslot(event_id):
+def new_res(event_id):
     return render_template('new_dateslot.html', form=empty_dateform())
 
 @app.route("/event/<event_id>/new_dateslot", methods=['POST'])
@@ -162,7 +199,7 @@ def create_dateslot(event_id):
         return redirect(url_for("index"))
     else:
         return render_template("new_dateslot.html", form=form), 400
- 
+
 
 def get_event(id):
     """Utility function to get the first event matching id or None"""

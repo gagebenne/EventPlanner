@@ -7,7 +7,6 @@
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
     <h2>{{ event['description'] }}</h2>
-    <!--<h4>{{ event['date'] }}</h4>--> <!--TEMPORARY FIX!!!-->
     <h5>Created by: {{ event['admin_name'] }}</h5>
     </div>
     <div>
@@ -16,8 +15,9 @@
             <p>T: {{ t.task }}</p>
         {% endfor %}
     </div>
-    <a href="/event/{{ event['id'] }}/newtask">Add Task</a>
-    <a href="/event/{{ event['id'] }}/newtask">Join Event</a>
+    <button class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</button>
+	<br>
+    <button class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond">Join Event</button>
 </div>
 
     <div class="participanttable">
@@ -36,14 +36,14 @@
                                     {% endfor %}
                                 {% endfor %}
                             </div>
-                        {% endfor %}  
+                        {% endfor %}
                     {% endfor %}
                     <br><br>
-                    <a href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</a>
+                    <button class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</button>
             </div>
         </div>
     </div>
-    <button class="btn btn-outline-info col-sm-4 join my-4" onclick="showparticipantform()">Join Event</button>
+    <!--<button class="btn btn-outline-info col-sm-4 join my-4" onclick="showparticipantform()">Join Event</button>-->
 
 <!-- Form for adding participant -->
 <div id="formshow" style="display: none;">
@@ -68,7 +68,6 @@
 <script>
     $(".date-picker").datepicker()
     $(".24-hour-form").hide();
-
     function showparticipantform() {
         var x = document.getElementById('formshow');
         if (x.style.display === 'none') {
@@ -77,13 +76,11 @@
             x.style.display = 'none';
         }
     }
-
     $('.toggle-time-button').on('click', function(e){
         e.preventDefault()
         $('.24-hour-form').toggle()
         $('.12-hour-form').toggle()
     });
-
     $('.timeslot-picker').selectable({
         selected: function(event, ui){
             $(ui.selected).addClass('active')

@@ -58,9 +58,9 @@ def with_timeslots(form_type, timeslots):
 class TaskForm(Form):
     """
     `Form` used for creating new `Task`s
-    """ 
+    """
     name = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
-    
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -79,6 +79,8 @@ class ParticipantForm(Form):
     `Form` used for creating new `Participant`s
     """
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
