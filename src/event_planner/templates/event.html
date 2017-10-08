@@ -12,7 +12,7 @@
     <div class="tasks">
       <h5>Tasks</h5>
         {% for t in event.tasks %}
-            <p>T: {{ t.task }}</p>
+            <p>{{ t.task }}: {{t.participant.name if t.is_assigned else "Unclaimed"}}</p>
         {% endfor %}
     </div>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
