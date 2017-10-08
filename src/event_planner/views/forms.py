@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
+from wtforms import Form, SelectField, SubmitField, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
 from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
 from .. import utils
@@ -79,7 +79,7 @@ def validate_date(form, field):
         #raise ValidationError('Invalid date format, use MM/DD/YYYY')
     elif (form.date.data < datetime.date.today()):
         raise ValidationError('Cannot choose a date in the past')
-        
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -96,12 +96,12 @@ class EventForm(Form):
 class ParticipantTaskForm(Form):
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     participanttasks = SelectField(
-        'Tasks', 
-        choices=[], 
+        'Tasks',
+        choices=[],
         coerce=int
     )
     submit = SubmitField("Submit")
-                            
+
 class ParticipantForm(Form):
     """
     `Form` used for creating new `Participant`s
