@@ -91,6 +91,31 @@ def show_event_post(event_id=None):
 
     return redirect(url_for('show_event_get', event_id=event_id))
 
+
+@app.route("/event/<event_id>/newtask", methods=['GET'])
+def new_task_get(event_id):
+    """GET - New event task form"""
+    return render_template('newtask.html', form=forms.TaskForm())
+
+
+@app.route("/event/<event_id>/newtask", methods=['POST'])
+def new_task_post(event_id):
+    """Creates a new event task and commits it to the db"""
+    
+    form = forms.TaskForm(request.form)
+    if form.validate():
+        task = models.Task(
+            form.name.data, 
+            False, 
+            None, 
+            event_id)
+        db.session.add(task)
+        db.session.commit()
+        return redirect(url_for('show_event_get', event_id=event_id))
+    else:
+        return render_template("/event/<event_id>/newtask", form=form, event=event), 400
+
+
 def get_event(id):
     """Utility function to get the first event matching id or None"""
     return models.Event.query.filter(models.Event.id == id).first()
