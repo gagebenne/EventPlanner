@@ -1,6 +1,6 @@
 import datetime
 from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
 from .. import utils
 
@@ -48,8 +48,9 @@ def with_timeslots(form_type, timeslots):
     return fresh_type
 
 class TaskForm(Form):
-    task = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
-    
+    task = StringField("taskname")
+
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -58,9 +59,23 @@ class EventForm(Form):
     eventdescription = StringField("eventdescription", [Optional()])
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
     tasks = FieldList(FormField(TaskForm), min_entries=5)
+
+    def validate_tasks(form, field):
+        """
+        Validation method for tasks, since there is no good default way to validate a FieldList
+        :param field: the FieldList to validate on
+        :return: throws a ValidationError if one or more tasks is empty
+        """
+        for i in range (0,field.__len__()):
+            if field.__getitem__(i).data == dict([('task','')]):
+                raise ValidationError('One or more tasks is empty')
+                break
+
+
     @staticmethod
     def with_timeslots(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
+
 
 class ParticipantForm(Form):
     """
