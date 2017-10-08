@@ -131,7 +131,7 @@ def new_task_post(event_id):
         db.session.commit()
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("newtask.html", form=form, event=event), 400
+        return render_template("newtask.html", form=form, event_id=event_id), 400
 
 
 @app.route("/event/<event_id>/respond", methods=['GET'])
@@ -168,6 +168,46 @@ def create_response(event_id):
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
         return render_template("respond.html", form=form, event=event), 400
+
+@app.route("/event/<event_id>/respondtask", methods=['GET'])
+def new_task_response(event_id):
+    event = get_event(event_id) or abort(404)
+    
+    form = forms.ParticipantTaskForm(request.form)
+    event_tasks = []
+    for a in event.tasks:
+        if a.is_assigned == False:
+            event_tasks.append((a.id, a.task))
+
+    form.participanttasks.choices = event_tasks
+                            
+    return render_template('respondtask.html', form=form)
+
+@app.route("/event/<event_id>/respondtask", methods=['POST'])
+def create_task_response(event_id):
+
+    event = get_event(event_id)
+    form = forms.ParticipantTaskForm(request.form)
+
+        
+    if True: #form.validate()        
+        participant = models.Participant(
+            form.participantname.data,
+            event,
+            False
+        )
+        db.session.add(participant)
+        db.session.flush()
+        
+        task = models.Task.query.filter_by(event_id = event_id, id=form.participanttasks.data).first()
+        task.part_id = participant.id
+        task.is_assigned = True
+
+        db.session.commit()
+        
+        return redirect(url_for('show_event_get', event_id=event_id))
+    else:
+        return render_template("respondtask.html", form=form, event=event), 400
 
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):

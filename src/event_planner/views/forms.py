@@ -79,7 +79,7 @@ def validate_date(form, field):
         #raise ValidationError('Invalid date format, use MM/DD/YYYY')
     elif (form.date.data < datetime.date.today()):
         raise ValidationError('Cannot choose a date in the past')
-
+        
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -93,6 +93,15 @@ class EventForm(Form):
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
 
+class ParticipantTaskForm(Form):
+    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    participanttasks = SelectField(
+        'Tasks', 
+        choices=[], 
+        coerce=int
+    )
+    submit = SubmitField("Submit")
+                            
 class ParticipantForm(Form):
     """
     `Form` used for creating new `Participant`s
