@@ -86,7 +86,7 @@ class EventForm(Form):
     """
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty'), validators.Length(max=25, message='Event Name cannot exceed 25 characters')])
     eventdescription = StringField("eventdescription", [validators.Length(max=50, message='Description cannot exceed 50 characters')])  # Calls timeslot validation
-    adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
+    adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty'), validators.Length(max=20, message='Name cannot exceed 20 characters')])
     date = DateField("date", [validate_date, validate_timeslots], format="%m/%d/%Y")
 
     @staticmethod
