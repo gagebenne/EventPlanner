@@ -7,15 +7,20 @@
         <form class="col-sm-10 mx-auto" method="POST">
             <div class="container">
                 {{ input_field(form, 'participantname', 'Your Name') }}
-                <div class="timeslot-picker">
+                <!-- <div class="timeslot-picker"> -->
                     {% for dateslot in event_dateslots %}
-                        <h5><strong>{{ dateslot.date }}</strong></h5>
-                        {% for timeslot in dateslot.timeslots %}
-                            {{ form["slot_%s" % timeslot.time.strftime("%H%M")]()|safe }}
-                        {% endfor %}  
+						<div class="date">
+	                        <h5><strong>{{ dateslot.date }}</strong></h5>
+							<div class="timeslot-picker">
+	                        {% for timeslot in dateslot.timeslots %}
+	                            {{ form["slot_%s" % timeslot.time.strftime("%H%M")]()|safe }}
+	                        {% endfor %}
+							</div>
+						</div>
                     {% endfor %}
-                </div>
+                <!-- </div> -->
           </div>
+		  <br>
               <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
         </form>
     </div>
