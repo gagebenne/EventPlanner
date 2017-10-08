@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, SelectField, SubmitField, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
+from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectField, SelectMultipleField, SubmitField, validators
 from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
 from .. import utils
