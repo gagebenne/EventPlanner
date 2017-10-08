@@ -7,6 +7,7 @@ from . import forms
 
 empty_form = forms.EventForm.default_form()
 empty_dateform = forms.DateForm.default_form()
+empty_participantform = forms.ParticipantForm.default_form()
 
 @app.route("/")
 def index():
@@ -130,12 +131,17 @@ def new_task_post(event_id):
         db.session.commit()
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("/event/<event_id>/newtask", form=form, event=event), 400
+        return render_template("newtask.html", form=form, event=event), 400
 
 
 @app.route("/event/<event_id>/respond", methods=['GET'])
 def new_response(event_id):
-    return render_template('respond.html', form=forms.ParticipantForm())
+    event = get_event(event_id) or abort(404) 
+    event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
+    
+    event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
+
+    return render_template('respond.html', form=empty_participantform(), event_dateslots=event_dateslots)
 
 @app.route("/event/<event_id>/respond", methods=['POST'])
 def create_response(event_id):
@@ -144,13 +150,24 @@ def create_response(event_id):
     form = forms.ParticipantForm(request.form)
 
     if form.validate():
+        dateslot = models.Dateslot(
+            form.date.data,
+            admin
+        )
+        db.session.add(dateslot)
+
+        for timeslot in form.timeslots:
+            val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+            if val is True:
+                t = models.Timeslot(timeslot, dateslot)
+                db.session.add(t)
 
         # form
         db.session.commit()
 
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("/event/<event_id>/respond", form=form, event=event), 400
+        return render_template("respond.html", form=form, event=event), 400
  
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):

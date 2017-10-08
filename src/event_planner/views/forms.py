@@ -79,6 +79,8 @@ class ParticipantForm(Form):
     `Form` used for creating new `Participant`s
     """
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
