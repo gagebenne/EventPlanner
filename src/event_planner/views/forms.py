@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectField, SelectMultipleField, SubmitField, validators
+from wtforms import Form, SelectField, SubmitField, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
 from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
 from .. import utils
@@ -59,7 +59,7 @@ class TaskForm(Form):
     """
     `Form` used for creating new `Task`s
     """
-    name = StringField("taskname", [DataRequired(message='Task cannot be empty')])
+    name = StringField("taskname", [DataRequired(message='Task cannot be empty'), validators.Length(max=20, message='Task name cannot exceed 20 characters')])
 
 def validate_timeslots(form, field):
     displayError = True
@@ -79,14 +79,14 @@ def validate_date(form, field):
         #raise ValidationError('Invalid date format, use MM/DD/YYYY')
     elif (form.date.data < datetime.date.today()):
         raise ValidationError('Cannot choose a date in the past')
-        
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
     """
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty'), validators.Length(max=25, message='Event Name cannot exceed 25 characters')])
     eventdescription = StringField("eventdescription", [validators.Length(max=50, message='Description cannot exceed 50 characters')])  # Calls timeslot validation
-    adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
+    adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty'), validators.Length(max=20, message='Name cannot exceed 20 characters')])
     date = DateField("date", [validate_date, validate_timeslots], format="%m/%d/%Y")
 
     @staticmethod
@@ -96,12 +96,12 @@ class EventForm(Form):
 class ParticipantTaskForm(Form):
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     participanttasks = SelectField(
-        'Tasks', 
-        choices=[], 
+        'Tasks',
+        choices=[],
         coerce=int
     )
     submit = SubmitField("Submit")
-                            
+
 class ParticipantForm(Form):
     """
     `Form` used for creating new `Participant`s
