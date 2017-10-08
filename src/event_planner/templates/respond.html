@@ -2,23 +2,19 @@
 {% from 'macros.html' import display_errors, input_field %}
 {{ display_errors(form) }}
 <div class="container text-center">
-  <div id="formshow">
-      <form class="col-sm-10 mx-auto" method="POST">
-          <div class="container">
-              <div class="text-center">
-                  {{ input_field(form, 'participantname', 'Participant Name') }}
-                  <button class="btn btn-info toggle-time-button my-3 btn-sm">Toggle time format</button>
-                  <p>Time slots are 30 minutes long and begin at indicated time.</p>
-                  <p>Hold Ctrl or Command(Mac) to select multiple time slots.</p>
-              </div>
-              <div class="timeslot-picker">
-                  {% for timeslot in form.timeslots %}
-                      {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
-                  {% endfor %}
-              </div>
-              
+    <div id="formshow">
+        <form class="col-sm-10 mx-auto" method="POST">
+            <div class="container">
+                <div class="timeslot-picker">
+                    {% for dateslot in event_dateslots %}
+                        <h5><strong>{{ dateslot.date }}</strong></h5>
+                        {% for timeslot in dateslot.timeslots %}
+                            {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
+                        {% endfor %}  
+                    {% endfor %}
+                </div>
           </div>
-          <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
-      </form>
-  </div>
+              <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
+        </form>
+    </div>
 {% include 'footer.html' %}
