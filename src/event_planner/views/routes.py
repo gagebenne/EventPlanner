@@ -135,13 +135,13 @@ def new_task_post(event_id):
 
 @app.route("/event/<event_id>/respond", methods=['GET'])
 def new_response(event_id):
-    return render_template('respond.html', form=form.ParticipantForm())
+    return render_template('respond.html', form=forms.ParticipantForm())
 
 @app.route("/event/<event_id>/respond", methods=['POST'])
 def create_response(event_id):
 
     event = get_event(event_id)
-    form = form.ParticipantForm(request.form)
+    form = forms.ParticipantForm(request.form)
 
     if form.validate():
 
