@@ -59,7 +59,7 @@ class TaskForm(Form):
     """
     `Form` used for creating new `Task`s
     """
-    name = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
+    name = StringField("taskname", [DataRequired(message='Task cannot be empty')])
 
 def validate_timeslots(form, field):
     displayError = True
@@ -98,7 +98,7 @@ class ParticipantForm(Form):
     `Form` used for creating new `Participant`s
     """
     participantname = StringField("participantname")
-    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
 
     def validate_participantname(form, field):
         """
@@ -113,6 +113,7 @@ class ParticipantForm(Form):
             raise ValidationError('Participant Name cannot be empty')
 
         # Also does validation for timeslots here, since there's no other place for it.
+        """ CURRENTLY DEPRECATED
         displayError = True
         for timeslot in form.timeslots:
             val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
@@ -121,6 +122,7 @@ class ParticipantForm(Form):
                 break
         if displayError:
             raise ValidationError('Must select at least one timeslot')
+        """
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
