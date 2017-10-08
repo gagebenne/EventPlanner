@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField
+from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
 from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
 from .. import utils
@@ -84,7 +84,7 @@ class EventForm(Form):
     """
     `Form` used for creating new `Event`s
     """
-    eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
+    eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty'), validators.Length(max=25, message='Event Name cannot exceed 25 characters')])
     eventdescription = StringField("eventdescription", [validate_timeslots])  # Calls timeslot validation
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
     date = DateField("date", [validate_date], format="%m/%d/%Y")
