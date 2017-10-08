@@ -85,9 +85,9 @@ class EventForm(Form):
     `Form` used for creating new `Event`s
     """
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty'), validators.Length(max=25, message='Event Name cannot exceed 25 characters')])
-    eventdescription = StringField("eventdescription", [validate_timeslots])  # Calls timeslot validation
+    eventdescription = StringField("eventdescription", [validators.Length(max=50, message='Description cannot exceed 50 characters')])  # Calls timeslot validation
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
-    date = DateField("date", [validate_date], format="%m/%d/%Y")
+    date = DateField("date", [validate_date, validate_timeslots], format="%m/%d/%Y")
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
