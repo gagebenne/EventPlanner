@@ -16,7 +16,8 @@
             <p>T: {{ t.task }}</p>
         {% endfor %}
     </div>
-        
+    <a href="/event/{{ event['id'] }}/newtask">Add Task</a>
+    <a href="/event/{{ event['id'] }}/newtask">Join Event</a>
 </div>
 
     <div class="participanttable">
@@ -45,6 +46,7 @@
         <div class="container">
             <div class="text-center">
                 {{ input_field(form, 'participantname', 'Participant Name') }}
+                {{ input_field(form, 'participanttasks', 'Participant Name') }}
                 <button class="btn btn-info toggle-time-button my-3 btn-sm">Toggle time format</button>
                 <p>Time slots are 30 minutes long and begin at indicated time.</p>
                 <p>Hold Ctrl or Command(Mac) to select multiple time slots.</p>
