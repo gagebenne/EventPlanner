@@ -9,7 +9,7 @@
     <h2>{{ event['description'] }}</h2>
     <h5>Created by: {{ event['admin_name'] }}</h5>
     </div>
-    <div>
+    <div class="tasks">
       <h5>Tasks</h5>
         {% for t in event.tasks %}
             <p>T: {{ t.task }}</p>
