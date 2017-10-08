@@ -83,35 +83,5 @@
     </form>
 </div>
 </div>
-<script>
-    $(".date-picker").datepicker()
-    $(".24-hour-form").hide();
-    function showparticipantform() {
-        var x = document.getElementById('formshow');
-        if (x.style.display === 'none') {
-            x.style.display = 'block';
-        } else {
-            x.style.display = 'none';
-        }
-    }
-    $('.toggle-time-button').on('click', function(e){
-        e.preventDefault()
-        $('.24-hour-form').toggle()
-        $('.12-hour-form').toggle()
-    });
-    $('.timeslot-picker').selectable({
-        selected: function(event, ui){
-            $(ui.selected).addClass('active')
-            $(ui.selected).removeClass('selecting')
-            $(ui.selected).children('input').val('1')
-        },
-        unselected: function(event, ui){
-            $(ui.unselected).removeClass('active')
-            $(ui.unselected).removeClass('selecting')
-            $(ui.unselected).children('input').val('0')
-        },
-        selecting: function(event, ui){
-            $(ui.selecting).addClass('selecting')
-        }
-    });
+<script src="/static/timeslot_picker.js"></script>
 </script>
