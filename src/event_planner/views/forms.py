@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField
+from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField
 from wtforms.validators import DataRequired, Optional
 from wtforms.widgets import HiddenInput
 from .. import utils
@@ -48,7 +48,10 @@ def with_timeslots(form_type, timeslots):
     return fresh_type
 
 class TaskForm(Form):
-    task = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
+    """
+    `Form` used for creating new `Task`s
+    """ 
+    name = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
     
 class EventForm(Form):
     """
@@ -57,7 +60,6 @@ class EventForm(Form):
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
     eventdescription = StringField("eventdescription", [Optional()])
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
-    tasks = FieldList(FormField(TaskForm), min_entries=5)
     @staticmethod
     def with_timeslots(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
