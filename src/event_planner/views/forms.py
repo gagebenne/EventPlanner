@@ -1,5 +1,5 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField
+from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, SubmitField, validators, SelectField
 from wtforms.validators import DataRequired, Optional
 from wtforms.widgets import HiddenInput
 from .. import utils
@@ -58,9 +58,9 @@ def with_timeslots(form_type, timeslots):
 class TaskForm(Form):
     """
     `Form` used for creating new `Task`s
-    """
-    name = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
-
+    """ 
+    name = StringField("taskname", [DataRequired(message='Task Name cannot be empty')])
+    
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -74,13 +74,21 @@ class EventForm(Form):
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
 
+class ParticipantTaskForm(Form):
+    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    participanttasks = SelectField(
+        'Tasks', 
+        choices=[], 
+        coerce=int
+    )
+    submit = SubmitField("Submit")
+                            
 class ParticipantForm(Form):
     """
     `Form` used for creating new `Participant`s
     """
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
-
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
