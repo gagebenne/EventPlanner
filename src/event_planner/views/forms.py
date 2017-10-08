@@ -71,6 +71,15 @@ def validate_timeslots(form, field):
     if displayError:
         raise ValidationError('Must select at least one timeslot')
 
+def validate_date(form, field):
+    if not isinstance(form.date.data, datetime.date):
+        #An error is already being printed from somewhere else,
+        # since WTForm automatically displays an error for improper format
+            x = 1+1 #placeholder
+        #raise ValidationError('Invalid date format, use MM/DD/YYYY')
+    elif (form.date.data < datetime.date.today()):
+        raise ValidationError('Cannot choose a date in the past')
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
@@ -78,7 +87,7 @@ class EventForm(Form):
     eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
     eventdescription = StringField("eventdescription", [validate_timeslots])  # Calls timeslot validation
     adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
-    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
@@ -121,7 +130,7 @@ class DateForm(Form):
     """
     `Form` used for creating new `Date`s
     """
-    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
