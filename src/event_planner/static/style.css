@@ -47,6 +47,20 @@
     padding: 10px;
 }
 
+.date{
+    border-radius: 5px;
+    background: #f0f0f0;
+    width:90%;
+    margin: 10px auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.date > .timeslot{
+    float:left;
+}
+
+
 .timeslot.active{
     background: #D6FFFF;
 }
