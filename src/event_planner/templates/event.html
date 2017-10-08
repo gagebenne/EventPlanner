@@ -25,6 +25,7 @@
             <div class="timeslot-display">
                     {% for dateslot in event_dateslots %}
                         <h5><strong>{{ dateslot.date }}</strong></h5>
+						<br>
                         {% for timeslot in dateslot.timeslots %}
                             <div class="timeslot" style="height:auto;width:auto;">
                                 <p><strong>{{ timeslot.time.strftime("%I:%M %p") }}</strong></p>
