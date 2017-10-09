@@ -41,7 +41,7 @@
       <div class="timeslot-display">
         {% for dateslot in event_dateslots %}
 					<div class="date">
-	          <h5><strong>{{ dateslot.date }}</strong></h5>
+	          <h5><strong>{{ dateslot.date.strftime('%d %b %Y') }}</strong></h5>
 						<br>
 	          {% for timeslot in dateslot.timeslots %}
 
