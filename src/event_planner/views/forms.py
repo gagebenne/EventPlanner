@@ -93,6 +93,15 @@ class EventForm(Form):
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
 
+
+class DateForm(Form):
+    """
+    `Form` used for creating new `Date`s
+    """
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
+    submit = SubmitField("Submit")
+    copy = SubmitField("Submit and Copy")
+
 class ParticipantTaskForm(Form):
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     participanttasks = SelectField(
@@ -103,10 +112,7 @@ class ParticipantTaskForm(Form):
     submit = SubmitField("Submit")
 
 class ParticipantForm(Form):
-    """
-    `Form` used for creating new `Participant`s
-    """
-    participantname = StringField("participantname")
+    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     date = DateField("date", [validate_date], format="%m/%d/%Y")
 
     def validate_participantname(form, field):
@@ -132,19 +138,7 @@ class ParticipantForm(Form):
         if displayError:
             raise ValidationError('Must select at least one timeslot')
         """
-
-    @staticmethod
-    def default_form(timeslots=utils.all_timeslots()):
-        return with_timeslots(ParticipantForm, timeslots)
-
-class DateForm(Form):
-    """
-    `Form` used for creating new `Date`s
-    """
-    date = DateField("date", [validate_date], format="%m/%d/%Y")
-    submit = SubmitField("Submit")
-    copy = SubmitField("Submit and Copy")
-
+        
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(DateForm, timeslots)
