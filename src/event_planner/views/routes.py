@@ -75,13 +75,12 @@ def show_event_get(event_id):
     event_times = map((lambda x : x.time), event_timeslots)
     event_dateslots_times = event_times
     open_task = reduce((lambda x,y : x or y), map((lambda x: not x.is_assigned), event.tasks), False)
-
     participants = list(event.participants)
 
     form_type = forms.ParticipantForm.default_form(event_times)
     form = form_type()
 
-    return render_template('event_view.html', form=form, event=event, admin=event_admin, participants=participants, event_dateslots=event_dateslots)
+    return render_template('event_view.html', form=form, event=event, admin=event_admin, participants=participants, event_dateslots=event_dateslots, open_task=open_task)
 
 
 @app.route("/event/<event_id>", methods=['POST'])
