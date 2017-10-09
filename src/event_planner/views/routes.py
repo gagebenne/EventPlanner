@@ -73,7 +73,11 @@ def show_event_get(event_id):
     event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
     event_times = map((lambda x : x.time), event_timeslots)
     event_dateslots_times = event_times
-	
+    event_tasks = event.tasks
+    open_task = False
+    for t in event_tasks:
+        if not t.participant:
+            open_task= True
     participants = list(event.participants)
 
     form_type = forms.ParticipantForm.default_form(event_dateslots_times)
@@ -172,7 +176,7 @@ def create_response(event_id):
 @app.route("/event/<event_id>/respondtask", methods=['GET'])
 def new_task_response(event_id):
     event = get_event(event_id) or abort(404)
-    
+
     form = forms.ParticipantTaskForm(request.form)
     event_tasks = []
     for a in event.tasks:
@@ -180,7 +184,7 @@ def new_task_response(event_id):
             event_tasks.append((a.id, a.task))
 
     form.participanttasks.choices = event_tasks
-                            
+
     return render_template('respondtask.html', form=form)
 
 @app.route("/event/<event_id>/respondtask", methods=['POST'])
@@ -189,8 +193,8 @@ def create_task_response(event_id):
     event = get_event(event_id)
     form = forms.ParticipantTaskForm(request.form)
 
-        
-    if True: #form.validate()        
+
+    if True: #form.validate()
         participant = models.Participant(
             form.participantname.data,
             event,
@@ -198,13 +202,13 @@ def create_task_response(event_id):
         )
         db.session.add(participant)
         db.session.flush()
-        
+
         task = models.Task.query.filter_by(event_id = event_id, id=form.participanttasks.data).first()
         task.part_id = participant.id
         task.is_assigned = True
 
         db.session.commit()
-        
+
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
         return render_template("respondtask.html", form=form, event=event), 400
@@ -233,7 +237,7 @@ def create_dateslot(event_id):
                 t = models.Timeslot(timeslot, dateslot)
                 db.session.add(t)
         db.session.commit()
-        
+
         if form.submit.data:
             return redirect(url_for("index"))
         else:
