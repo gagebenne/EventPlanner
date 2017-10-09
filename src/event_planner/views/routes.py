@@ -74,11 +74,7 @@ def show_event_get(event_id):
     event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
     event_times = map((lambda x : x.time), event_timeslots)
     event_dateslots_times = event_times
-    event_tasks = event.tasks
-    open_task = False
-    for t in event_tasks:
-        if not t.participant:
-            open_task= True
+    open_task = reduce((lambda x,y : x or y), map((lambda x: not x.is_assigned), event.tasks), False)
 
     participants = list(event.participants)
 
