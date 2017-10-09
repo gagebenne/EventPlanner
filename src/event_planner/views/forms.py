@@ -2,7 +2,7 @@ import datetime
 from wtforms import Form, SelectField, SubmitField, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
 from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
-from .. import utils
+from .. import utils, models
 
 class TimeslotInput(HiddenInput):
     """
@@ -80,7 +80,7 @@ def validate_date(form, field):
         # since WTForm automatically displays an error for improper format
             x = 1+1 #placeholder
         #raise ValidationError('Invalid date format, use MM/DD/YYYY')
-    elif (form.date.data < datetime.date.today()):
+    elif form.date.data < datetime.date.today():
         raise ValidationError('Cannot choose a date in the past')
 
 class EventForm(Form):
@@ -96,12 +96,24 @@ class EventForm(Form):
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
 
-
+def unique_date(form, field):
+    """
+    Validator that checks for uniqueness among dates for a specific event
+    :return: Raises a ValidationError if a Dateslot for the same event with the same date already exists.
+    """
+    part_id = 1 #If we can figure out the part_id of the thing we're validating, we can use the commented out method
+    #dateslots = models.Dateslot.query.filter(models.Dateslot.part_id == part_id).all()
+    dateslots = models.Dateslot.query.all()
+    for dateslot in dateslots:
+        db_date = dateslot.date
+        if db_date == field.data:
+            raise ValidationError('Duplicate date for this event')
+    
 class DateForm(Form):
     """
     `Form` used for creating new `Dateslot`s
     """
-    date = DateField("date", [validate_date], format="%m/%d/%Y")
+    date = DateField("date", [validate_date, unique_date], format="%m/%d/%Y")
     submit = SubmitField("Submit")
     copy = SubmitField("Submit and Copy")
 

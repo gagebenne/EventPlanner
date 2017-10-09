@@ -1,7 +1,17 @@
 {% include 'header.html' %}
 {% from 'macros.html' import display_errors, input_field %}
 {{ display_errors(form) }}
-<div class="container text-center">
+<div class="centertext align-items-center">
+<div class="container">
+	<div class="introtext">
+    <h1>{{ event['title'] }}</h1>
+    <h2>{{ event['description'] if event['description'] else "No Description" }}</h2>
+    <h5>Created by: {% for p in event.participants %}
+		{% if p.is_admin %}
+			{{ p.name }}</h5>
+			{%endif%}
+			{%endfor%}
+    </div>
 <h1>Create a New Event Task</h1>
 
     <div class="container">
@@ -10,6 +20,6 @@
             <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
         </form>
     </div>
-    
+</div>
 </div>
 {% include 'footer.html' %}

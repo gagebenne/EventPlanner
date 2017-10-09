@@ -1,12 +1,22 @@
 {% include 'header.html' %}
-<div class="container text-center">
+<div class="centertext align-items-center">
+<div class="container">
+	<div class="introtext">
+	<h1>{{ event['title'] }}</h1>
+	<h2>{{ event['description'] if event['description'] else "No Description" }}</h2>
+	<h5>Created by: {% for p in event.participants %}
+		{% if p.is_admin %}
+			{{ p.name }}</h5>
+			{%endif%}
+			{%endfor%}
+	</div>
 <h1>Select A Date To Respond To</h1>
     <div class="date">
         {% for dateslot in dateslots %}
-            <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond?date={{ dateslot.date }}">{{ dateslot.date }}</a>
+            <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond?date={{ dateslot.date }}">{{ dateslot.date.strftime('%d %b %Y') }}</a>
 			<br>
         {% endfor %}
     </div>
-
+</div>
 </div>
 {% include 'footer.html' %}

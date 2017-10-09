@@ -17,7 +17,12 @@
       <h5>Tasks</h5>
 	  	{% if event.tasks %}
 	      {% for t in event.tasks %}
-	        <p>{{ t.task }}: {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
+	        <p>{{ t.task }}:
+              {% if t.participant.name == "" %}
+                  Anonymous
+              {% else %}
+                  {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
+              {% endif %}
 	      {% endfor %}
 		  {% else %}
 			  <p>There are no tasks for this event</p>

@@ -114,13 +114,15 @@ def show_event_post(event_id=None):
 def new_task_get(event_id):
     """GET - New event task form"""
     
-    return render_template('newtask.html', form=forms.TaskForm())
+    event = get_event(event_id) or abort(404)
+    return render_template('newtask.html', event=event, form=forms.TaskForm())
 
 
 @app.route("/event/<event_id>/newtask", methods=['POST'])
 def new_task_post(event_id):
     """POST - Creates a new event task and commits it to the db"""
-
+  
+    event = get_event(event_id) or abort(404)
     form = forms.TaskForm(request.form)
     if form.validate():
         task = models.Task(
@@ -132,7 +134,7 @@ def new_task_post(event_id):
         db.session.commit()
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("newtask.html", form=form, event_id=event_id), 400
+        return render_template("newtask.html", event=event, form=form, event_id=event_id), 400
 
 
 @app.route("/event/<event_id>/respond", methods=['GET'])
@@ -148,6 +150,7 @@ def new_response(event_id):
 
     if 'date' in locals() and date != None:
 
+        date_string = datetime.strptime(date, '%Y-%m-%d').strftime('%d %b %Y')
         specific_dateslots = filter((lambda x : x.date == parser.parse(request.args.get('date')).date()), event_dateslots)
         date_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), specific_dateslots), [])
         event_times = map((lambda x : x.time), date_timeslots)
@@ -155,7 +158,7 @@ def new_response(event_id):
         form_type = forms.ParticipantForm.default_form(event_times)
         form = form_type()
 
-        return render_template('respond.html', form=form, event_timeslots=date_timeslots, date=date)
+        return render_template('respond.html', event=event, form=form, event_timeslots=date_timeslots, date=date, date_string=date_string)
     else:
         return render_template('respond_dates.html', event=event, dateslots=event_dateslots)
 
@@ -211,7 +214,7 @@ def new_task_response(event_id):
 
     form.participanttasks.choices = event_tasks
 
-    return render_template('respondtask.html', form=form)
+    return render_template('respondtask.html', event=event, form=form)
 
 @app.route("/event/<event_id>/respondtask", methods=['POST'])
 def create_task_response(event_id):
@@ -221,7 +224,7 @@ def create_task_response(event_id):
     form = forms.ParticipantTaskForm(request.form)
 
 
-    if True: #form.validate()
+    if form.participantname.data != "": #form.validate()
         participant = models.Participant(
             form.participantname.data,
             event,
@@ -229,7 +232,7 @@ def create_task_response(event_id):
         )
         db.session.add(participant)
         db.session.flush()
-
+        
         task = models.Task.query.filter_by(event_id = event_id, id=form.participanttasks.data).first()
         task.part_id = participant.id
         task.is_assigned = True
@@ -238,7 +241,7 @@ def create_task_response(event_id):
 
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("respondtask.html", form=form, event=event), 400
+        return redirect(url_for('show_event_get', event_id=event_id))
 
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):
