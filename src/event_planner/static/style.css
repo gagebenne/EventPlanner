@@ -47,6 +47,36 @@
     padding: 10px;
 }
 
+.date{
+    border-radius: 5px;
+    background: #f0f0f0;
+    width:90%;
+    margin: 10px auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.date > .timeslot{
+    float:left;
+}
+
+.tasks{
+	border-radius: 5px;
+    background: #f0f0f0;
+    width:90%;
+    margin: 10px auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.tasks > p {
+	border-radius: 5px;
+    background: white;
+    width: auto;
+    margin: 2px auto;
+}
+
+
 .timeslot.active{
     background: #D6FFFF;
 }
@@ -64,6 +94,17 @@
     padding: 10px 0;
     background-color: #7FDBFF;
 }
+
+.emptycard {
+	text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 65%;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #B33A3A;
+}
+
 .eventcard:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
@@ -101,4 +142,12 @@
 
 .participanttable{
     padding: 0 2%;
+}
+
+p.claimed{
+	background-color: #B1CBBA;
+}
+
+p.unclaimed{
+	background-color: #EDC4C5;
 }

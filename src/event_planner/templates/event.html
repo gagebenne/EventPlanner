@@ -6,64 +6,70 @@
 <div class="container">
     <div class="introtext">
     <h1>{{ event['title'] }}</h1>
-    <h2>{{ event['description'] }}</h2>
-    <h4>{{ event['date'] }}</h4>
-    <h5>Created by: {{ event['admin_name'] }}</h5>
+    <h2>{{ event['description'] if event['description'] else "No Description" }}</h2>
+    <h5>Created by: {% for p in event.participants %}
+		{% if p.is_admin %}
+			{{ p.name }}</h5>
+			{%endif%}
+			{%endfor%}
     </div>
+    <div class="tasks">
+      <h5>Tasks</h5>
+	  	{% if event.tasks %}
+	      {% for t in event.tasks %}
+		  	{%if t.is_assigned %}
+	        	<p class="claimed">{{ t.task }}: {{ t.participant.name }}</p>
+            {% else %}
+				<p class="unclaimed">{{ t.task }}: Unclaimed</p>
+			{% endif %}
+	      {% endfor %}
+		  {% else %}
+			  <p>There are no tasks for this event</p>
+		  {% endif %}
+    </div>
+    <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
+	{% if (open_task) %}
+		<a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respondtask">Claim Task</a>
+	{% endif %}
+	<br>
+    <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond">Join Event</a>
 </div>
 
-    <div class="participanttable">
-        <div class="container">
-            <div class="timeslot-display">
-                    {% for t in event_timeslots %}
-                        <div class="timeslot" style="height:auto;width:auto;">
-                            <p><strong>{{ t.time.strftime("%I:%M %p") }}</strong></p>
-                            {% for p in participants %}
-                                {% for pt in p.timeslots %}
-                                    {% if pt.time == t.time %}
-                                        <p>{{ p.name }}</p>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        </div>  
+  <div class="participanttable">
+    <div class="container">
+      <div class="timeslot-display">
+        {% for dateslot in event_dateslots %}
+					<div class="date">
+	          <h5><strong>{{ dateslot.date.strftime('%d %b %Y') }}</strong></h5>
+						<br>
+	          {% for timeslot in dateslot.timeslots %}
+
+	            <div class="timeslot" style="height:auto;width:auto;">
+	              <p><strong>{{ timeslot.time.strftime("%I:%M %p") }}</strong></p>
+
+	              {% for p in participants %}
+	                {% for pd in p.dateslots %}
+                    {% for pt in pd.timeslots %}
+  	                  {% if timeslot.time == pt.time %}
+  	                    <p>{{ p.name }}</p>
+  	                  {% endif %}
                     {% endfor %}
-            </div>
-        </div>
-    </div>
-    <button class="btn btn-outline-info col-sm-4 join my-4" onclick="showparticipantform()">Join Event</button>
+	                {% endfor %}
+	              {% endfor %}
+	            </div>
 
-<!-- Form for adding participant -->
-<div id="formshow" style="display: none;">
-    <form class="col-sm-10 mx-auto" method="POST">
-        <div class="container">
-            <div class="text-center">
-                {{ input_field(form, 'participantname', 'Participant Name') }}
-                <button class="btn btn-info toggle-time-button my-3 btn-sm">Toggle time format</button>
-                <p>Time slots are 30 minutes long and begin at indicated time.</p>
-                <p>Hold Ctrl or Command(Mac) to select multiple time slots.</p>
-            </div>
-            <div class="timeslot-picker">
-                {% for timeslot in form.timeslots %}
-                    {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
-                {% endfor %}
-            </div>
-        </div>
-        <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
-    </form>
-</div>
+	          {% endfor %}
+					</div>
+        {% endfor %}
+        <br><br>
+        <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</a>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
     $(".date-picker").datepicker()
     $(".24-hour-form").hide();
-
-    function showparticipantform() {
-        var x = document.getElementById('formshow');
-        if (x.style.display === 'none') {
-            x.style.display = 'block';
-        } else {
-            x.style.display = 'none';
-        }
-    }
 
     $('.toggle-time-button').on('click', function(e){
         e.preventDefault()

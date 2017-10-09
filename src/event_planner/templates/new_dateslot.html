@@ -2,15 +2,12 @@
 {% from 'macros.html' import display_errors, input_field %}
 {{ display_errors(form) }}
 <div class="container text-center">
-<h1>Create a New Event</h1>
+<h1>Add Another Date</h1>
 <button class="btn btn-info toggle-time-button my-3 btn-sm">Toggle time format</button>
 
     <div class="container">
         <form class="col-sm-10 mx-auto" method="POST">
-            {{ input_field(form, 'eventname', 'Event Name') }}
-            {{ input_field(form, 'eventdescription', 'Event Description') }}
-            {{ input_field(form, 'adminname', 'Your Name') }}
-            {{ input_field(form, 'date', 'Event Date', 'form-control date-picker') }}
+            {{ input_field(form, 'date', 'Date of Event', 'form-control date-picker') }}
             <p>Time slots are 30 minutes long and begin at indicated time.</p>
             <p>Hold Ctrl or Command(Mac) to select multiple time slots.</p>
             <div class="timeslot-picker">
@@ -18,10 +15,14 @@
                     {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
                 {% endfor %}
             </div>
-            <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
+            {{ input_field(form, 'submit', 'Submit') }}
+            {{ input_field(form, 'copy', 'Submit and Copy') }}
         </form>
     </div>
 
 </div>
+<script>
+Window.onload = document.getElementById('date').value=""
+</script>
 <script src="/static/timeslot_picker.js"></script>
 {% include 'footer.html' %}
