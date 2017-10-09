@@ -102,6 +102,10 @@ class DateForm(Form):
     submit = SubmitField("Submit")
     copy = SubmitField("Submit and Copy")
 
+    @staticmethod
+    def default_form(timeslots=utils.all_timeslots()):
+        return with_timeslots(DateForm, timeslots)
+
 class ParticipantTaskForm(Form):
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     participanttasks = SelectField(
@@ -141,4 +145,4 @@ class ParticipantForm(Form):
         
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
-        return with_timeslots(DateForm, timeslots)
+        return with_timeslots(ParticipantForm, timeslots)
