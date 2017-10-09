@@ -16,12 +16,12 @@
     <div class="tasks">
       <h5>Tasks</h5>
 	  	{% if event.tasks %}
-	        {% for t in event.tasks %}
-	            <p>{{ t.task }}: {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
-	        {% endfor %}
-		{% else %}
-			<p>There are no tasks for this event</p>
-		{% endif %}
+	      {% for t in event.tasks %}
+	        <p>{{ t.task }}: {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
+	      {% endfor %}
+		  {% else %}
+			  <p>There are no tasks for this event</p>
+		  {% endif %}
     </div>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
 	{% if (event.tasks and open_task) %}
@@ -31,47 +31,37 @@
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond">Join Event</a>
 </div>
 
-    <div class="participanttable">
-        <div class="container">
-            <div class="timeslot-display">
-					<!-- Test block because Mason's computer will not properly load data -->
-					<!-- <div class="date">
-						<h5><strong>wassup date</strong></h5>
+  <div class="participanttable">
+    <div class="container">
+      <div class="timeslot-display">
+        {% for dateslot in event_dateslots %}
+					<div class="date">
+	          <h5><strong>{{ dateslot.date }}</strong></h5>
 						<br>
-						<div class="timeslot" style="height:auto;width:auto;">
-							<p><strong>1:00pm</strong></p>
-							<p>Mason The Greatest fo all time who never once let up</p>
-							<p>Bill</p>
-						</div>
-						<div class="timeslot" style="height:auto;width:auto;">
-							<p><strong>2:00pm</strong></p>
-							<p>Mason</p>
-							<p>Bill</p>
-						</div>
-					</div> -->
-                    {% for dateslot in event_dateslots %}
-						<div class="date">
-	                        <h5><strong>{{ dateslot.date }}</strong></h5>
-							<br>
-	                        {% for timeslot in dateslot.timeslots %}
-	                            <div class="timeslot" style="height:auto;width:auto;">
-	                                <p><strong>{{ timeslot.time.strftime("%I:%M %p") }}</strong></p>
-	                                {% for p in participants %}
-	                                    {% for pt in p.timeslots %}
-	                                        {% if pt.time == timeslot.time %}
-	                                            <p>{{ p.name }}</p>
-	                                        {% endif %}
-	                                    {% endfor %}
-	                                {% endfor %}
-	                            </div>
-	                        {% endfor %}
-						</div>
+	          {% for timeslot in dateslot.timeslots %}
+
+	            <div class="timeslot" style="height:auto;width:auto;">
+	              <p><strong>{{ timeslot.time.strftime("%I:%M %p") }}</strong></p>
+
+	              {% for p in participants %}
+	                {% for pd in p.dateslots %}
+                    {% for pt in pd.timeslots %}
+  	                  {% if timeslot.time == pt.time %}
+  	                    <p>{{ p.name }}</p>
+  	                  {% endif %}
                     {% endfor %}
-                    <br><br>
-                    <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</a>
-            </div>
-        </div>
+	                {% endfor %}
+	              {% endfor %}
+	            </div>
+
+	          {% endfor %}
+					</div>
+        {% endfor %}
+        <br><br>
+        <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/new_dateslot">Add Another Date</a>
+      </div>
     </div>
+  </div>
 </div>
 <script>
     $(".date-picker").datepicker()
