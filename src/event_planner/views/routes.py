@@ -100,7 +100,6 @@ def show_event_post(event_id=None):
 
         for slot in form.timeslots:
              val = form["slot_%s" % slot.strftime("%H%M")].data[0]
-
              if val is True:
                 t = models.Timeslot(slot, participant)
                 db.session.add(t)
@@ -139,21 +138,23 @@ def new_task_post(event_id):
 def new_response(event_id):
     event = get_event(event_id) or abort(404) 
     event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
-    
     event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
-    event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
-    event_times = map((lambda x : x.time), event_timeslots)
 
-    form_type = forms.ParticipantForm.default_form(event_times)
-    form = form_type()
+    date = request.args.get('date')
 
-    dateslots = []
-    for dateslot in event_dateslots:
-        dateslots.append((dateslot.date,dateslot.date))
+    if 'date' in locals() and date != None:
 
-    form.date.choices = dateslots
+        specific_dateslots = filter((lambda x : x.date == parser.parse(request.args.get('date')).date()), event_dateslots)
+        date_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), specific_dateslots), [])
+        event_times = map((lambda x : x.time), date_timeslots)
 
-    return render_template('respond.html', form=form, event_timeslots=event_timeslots, dateslots=event_dateslots)
+        form_type = forms.ParticipantForm.default_form(event_times)
+        form = form_type()
+
+        return render_template('respond.html', form=form, event_timeslots=date_timeslots, date=date)
+    else:
+        return render_template('respond_dates.html', event=event, dateslots=event_dateslots)
+
 
 @app.route("/event/<event_id>/respond", methods=['POST'])
 def create_response(event_id):
@@ -172,13 +173,14 @@ def create_response(event_id):
         participant = models.Participant(form.participantname.data, event, False)
 
         dateslot = models.Dateslot(
-            parser.parse(form.date.data).date(),
+            parser.parse(request.args.get('date')).date(),
             participant
         )
         db.session.add(dateslot)
 
         for timeslot in form.timeslots:
-            val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+            form_time = form["slot_%s" % timeslot.strftime("%H%M")].data + [False]
+            val = form_time[0]
             if val is True:
                 t = models.Timeslot(timeslot, dateslot)
                 db.session.add(t)
