@@ -29,6 +29,9 @@ class TimeslotInput(HiddenInput):
         return "\n".join(html)
 
 class TimeslotField(BooleanField):
+    """
+    Legacy code from Kitchen Utensils team, we don't know how it works
+    """
     def __init__(self, label="", validators=None, timeslot=datetime.time(), **kwargs):
         super(TimeslotField, self).__init__(label, validators, default=False, **kwargs)
         self.widget = TimeslotInput(timeslot)
