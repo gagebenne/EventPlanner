@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>event_planner.defaults API documentation</title>
+    <title>event_planner.models.Dateslot API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -969,16 +969,21 @@ table {
   <div id="sidebar">
     <h1>Index</h1>
     <ul id="index">
-    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
-      
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#event_planner.models.Dateslot.Dateslot">Dateslot</a></span>
+        
+          
   <ul>
-    <li class="mono"><a href="#event_planner.defaults.SQLALCHEMY_DATABASE_URI">SQLALCHEMY_DATABASE_URI</a></li>
-    <li class="mono"><a href="#event_planner.defaults.SQLALCHEMY_TRACK_MODIFICATIONS">SQLALCHEMY_TRACK_MODIFICATIONS</a></li>
+    <li class="mono"><a href="#event_planner.models.Dateslot.Dateslot.__init__">__init__</a></li>
   </ul>
 
+        </li>
+      </ul>
     </li>
-
-
 
     </ul>
   </div>
@@ -991,38 +996,261 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">event_planner.defaults</span> module</h1>
+  <h1 class="title"><span class="name">event_planner.models.Dateslot</span> module</h1>
   
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-event_planner.defaults', this);">Show source &equiv;</a></p>
-  <div id="source-event_planner.defaults" class="source">
-    <pre><code>SQLALCHEMY_DATABASE_URI = "postgresql://evplanner:evplanner@localhost/evplanner"
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-event_planner.models.Dateslot', this);">Show source &equiv;</a></p>
+  <div id="source-event_planner.models.Dateslot" class="source">
+    <pre><code>from .. import db
+class Dateslot(db.Model):
+    """
+    Database model for a `Participant`'s `Dateslot`s
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    """
+    The primary key
+    
+    **Type:** INTEGER PRIMARY KEY
+    """
+
+    part_id = db.Column(db.Integer, db.ForeignKey("participant.id"))
+    """
+    The id of the `Participant` that this `Dateslot` belongs to
+    
+    **Type:** INTEGER FOREIGN KEY
+    """
+
+    date = db.Column(db.Date)
+    """
+    The `date` that this `Dateslot` started at
+    
+    **Type:** DATETIME
+    """
+
+    participant = db.relationship("Participant")
+    """
+    Relationship to the `Participant` that this `Dateslot` belongs to
+    
+    **Related Model:** `event_planner.models.Participant`
+    """
+
+    timeslots = db.relationship("Timeslot")
+    """
+    The `Timeslot`s that belong to this `Participant`
+
+    **Related Models:** `event_planner.models.Timeslot`
+    """
+    
+    def __init__(self, date, participant):
+        """Creates a new `Dateslot` instance"""
+        self.date = date
+        self.participant = participant
 </code></pre>
   </div>
 
   </header>
 
   <section id="section-items">
-    <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="event_planner.defaults.SQLALCHEMY_DATABASE_URI" class="name">var <span class="ident">SQLALCHEMY_DATABASE_URI</span></p>
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
       
+      <div class="item">
+      <p id="event_planner.models.Dateslot.Dateslot" class="name">class <span class="ident">Dateslot</span></p>
+      
+  
+    <div class="desc"><p>Database model for a <code>Participant</code>'s <code>Dateslot</code>s</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-event_planner.models.Dateslot.Dateslot', this);">Show source &equiv;</a></p>
+  <div id="source-event_planner.models.Dateslot.Dateslot" class="source">
+    <pre><code>class Dateslot(db.Model):
+    """
+    Database model for a `Participant`'s `Dateslot`s
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    """
+    The primary key
+    
+    **Type:** INTEGER PRIMARY KEY
+    """
+
+    part_id = db.Column(db.Integer, db.ForeignKey("participant.id"))
+    """
+    The id of the `Participant` that this `Dateslot` belongs to
+    
+    **Type:** INTEGER FOREIGN KEY
+    """
+
+    date = db.Column(db.Date)
+    """
+    The `date` that this `Dateslot` started at
+    
+    **Type:** DATETIME
+    """
+
+    participant = db.relationship("Participant")
+    """
+    Relationship to the `Participant` that this `Dateslot` belongs to
+    
+    **Related Model:** `event_planner.models.Participant`
+    """
+
+    timeslots = db.relationship("Timeslot")
+    """
+    The `Timeslot`s that belong to this `Participant`
+
+    **Related Models:** `event_planner.models.Timeslot`
+    """
+    
+    def __init__(self, date, participant):
+        """Creates a new `Dateslot` instance"""
+        self.date = date
+        self.participant = participant
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#event_planner.models.Dateslot.Dateslot">Dateslot</a></li>
+          <li>flask_sqlalchemy.Model</li>
+          <li>flask_sqlalchemy.Model</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.date" class="name">var <span class="ident">date</span></p>
+            
+
+            
+  
+    <div class="desc"><p>The <code>date</code> that this <code>Dateslot</code> started at</p>
+<p><strong>Type:</strong> DATETIME</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.id" class="name">var <span class="ident">id</span></p>
+            
+
+            
+  
+    <div class="desc"><p>The primary key</p>
+<p><strong>Type:</strong> INTEGER PRIMARY KEY</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.metadata" class="name">var <span class="ident">metadata</span></p>
+            
+
+            
   
   <div class="source_cont">
 </div>
 
-      </div>
-      <div class="item">
-      <p id="event_planner.defaults.SQLALCHEMY_TRACK_MODIFICATIONS" class="name">var <span class="ident">SQLALCHEMY_TRACK_MODIFICATIONS</span></p>
-      
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.part_id" class="name">var <span class="ident">part_id</span></p>
+            
+
+            
+  
+    <div class="desc"><p>The id of the <code>Participant</code> that this <code>Dateslot</code> belongs to</p>
+<p><strong>Type:</strong> INTEGER FOREIGN KEY</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.participant" class="name">var <span class="ident">participant</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Relationship to the <code>Participant</code> that this <code>Dateslot</code> belongs to</p>
+<p><strong>Related Model:</strong> <code>event_planner.models.Participant</code></p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.query" class="name">var <span class="ident">query</span></p>
+            
+
+            
   
   <div class="source_cont">
 </div>
 
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.query_class" class="name">var <span class="ident">query_class</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.timeslots" class="name">var <span class="ident">timeslots</span></p>
+            
+
+            
+  
+    <div class="desc"><p>The <code>Timeslot</code>s that belong to this <code>Participant</code></p>
+<p><strong>Related Models:</strong> <code>event_planner.models.Timeslot</code></p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.date" class="name">var <span class="ident">date</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Dateslot.Dateslot.participant" class="name">var <span class="ident">participant</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="event_planner.models.Dateslot.Dateslot.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, date, participant)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Creates a new <code>Dateslot</code> instance</p></div>
+  <div class="source_cont">
+</div>
+
+  </div>
+  
       </div>
-
-
+      </div>
 
   </section>
 
