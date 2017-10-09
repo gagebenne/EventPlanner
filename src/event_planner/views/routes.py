@@ -146,6 +146,7 @@ def new_response(event_id):
 
     if 'date' in locals() and date != None:
 
+        date_string = datetime.strptime(date, '%Y-%m-%d').strftime('%d %b %Y')
         specific_dateslots = filter((lambda x : x.date == parser.parse(request.args.get('date')).date()), event_dateslots)
         date_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), specific_dateslots), [])
         event_times = map((lambda x : x.time), date_timeslots)
@@ -153,7 +154,7 @@ def new_response(event_id):
         form_type = forms.ParticipantForm.default_form(event_times)
         form = form_type()
 
-        return render_template('respond.html', event=event, form=form, event_timeslots=date_timeslots, date=date)
+        return render_template('respond.html', event=event, form=form, event_timeslots=date_timeslots, date=date, date_string=date_string)
     else:
         return render_template('respond_dates.html', event=event, dateslots=event_dateslots)
 

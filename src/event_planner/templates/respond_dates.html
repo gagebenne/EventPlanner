@@ -13,7 +13,7 @@
 <h1>Select A Date To Respond To</h1>
     <div class="date">
         {% for dateslot in dateslots %}
-            <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond?date={{ dateslot.date }}">{{ dateslot.date }}</a>
+            <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond?date={{ dateslot.date }}">{{ dateslot.date.strftime('%d %b %Y') }}</a>
 			<br>
         {% endfor %}
     </div>
