@@ -1,6 +1,6 @@
 import datetime
-from wtforms import Form, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, SelectField
-from wtforms.validators import DataRequired, Optional
+from wtforms import Form, SelectField, SubmitField, StringField, BooleanField, DateField, Field, FieldList, FormField, SelectMultipleField, validators
+from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets import HiddenInput
 from .. import utils
 
@@ -58,49 +58,87 @@ def with_timeslots(form_type, timeslots):
 class TaskForm(Form):
     """
     `Form` used for creating new `Task`s
-    """ 
-    name = StringField("taskname", [DataRequired(message='Event Name cannot be empty')])
-    
+    """
+    name = StringField("taskname", [DataRequired(message='Task cannot be empty'), validators.Length(max=20, message='Task name cannot exceed 20 characters')])
+
+def validate_timeslots(form, field):
+    displayError = True
+    for timeslot in form.timeslots:
+        val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+        if val is True:
+            displayError = False
+            break
+    if displayError:
+        raise ValidationError('Must select at least one timeslot')
+
+def validate_date(form, field):
+    if not isinstance(form.date.data, datetime.date):
+        #An error is already being printed from somewhere else,
+        # since WTForm automatically displays an error for improper format
+            x = 1+1 #placeholder
+        #raise ValidationError('Invalid date format, use MM/DD/YYYY')
+    elif (form.date.data < datetime.date.today()):
+        raise ValidationError('Cannot choose a date in the past')
+
 class EventForm(Form):
     """
     `Form` used for creating new `Event`s
     """
-    eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty')])
-    eventdescription = StringField("eventdescription", [Optional()])
-    adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty')])
-    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+    eventname = StringField("eventname", [DataRequired(message='Event Name cannot be empty'), validators.Length(max=25, message='Event Name cannot exceed 25 characters')])
+    eventdescription = StringField("eventdescription", [validators.Length(max=50, message='Description cannot exceed 50 characters')])  # Calls timeslot validation
+    adminname = StringField("adminname", [DataRequired(message='Admin Name cannot be empty'), validators.Length(max=20, message='Name cannot exceed 20 characters')])
+    date = DateField("date", [validate_date, validate_timeslots], format="%m/%d/%Y")
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
 
+
 class DateForm(Form):
     """
     `Form` used for creating new `Date`s
     """
-    date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
+    submit = SubmitField("Submit")
+    copy = SubmitField("Submit and Copy")
 
+class ParticipantTaskForm(Form):
+    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    participanttasks = SelectField(
+        'Tasks',
+        choices=[],
+        coerce=int
+    )
+    submit = SubmitField("Submit")
+
+class ParticipantForm(Form):
+    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
+
+    def validate_participantname(form, field):
+        """
+        Does validation for participants, ie signing up for an event.
+        Note: This never dispays errors, since on hitting submit the page redirects.
+        However, the errors are raised, and it is prevented from being added.
+        Since timeslots is weird, we also do valiation for it here.
+        :param field: Params will be passed in automatically based on how validation is defined.
+        :return: If invalid, a validation error.
+        """
+        if field.data == '':
+            raise ValidationError('Participant Name cannot be empty')
+
+        # Also does validation for timeslots here, since there's no other place for it.
+        """ CURRENTLY DEPRECATED
+        displayError = True
+        for timeslot in form.timeslots:
+            val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+            if val is True:
+                displayError = False
+                break
+        if displayError:
+            raise ValidationError('Must select at least one timeslot')
+        """
+        
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(DateForm, timeslots)
-
-class ParticipantForm(Form):
-    """
-    `Form` used for creating new `Participant`s
-    """
-    participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
-    # date = DateField("date", [DataRequired('Date is empty or invalid')], format="%m/%d/%Y")
-    date = SelectField("date", [DataRequired('Date is empty or invalid')], choices=[])
-
-
-    @staticmethod
-    def default_form(timeslots=utils.all_timeslots()):
-        return with_timeslots(ParticipantForm, timeslots)
-
-# class DateResponseForm(Form):
-
-#     date = 
-
-#     @staticmethod
-#     def default_form(timeslots=utils.all_timeslots()):
-#         return with_timeslots(DateResponseForms, timeslots)

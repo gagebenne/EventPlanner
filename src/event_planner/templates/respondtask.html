@@ -1,0 +1,14 @@
+{% include 'header.html' %}
+{% from 'macros.html' import display_errors, input_field %}
+{{ display_errors(form) }}
+<div class="container text-center">
+    <h1>Respond to Task</h1>
+        <form class="col-sm-10 mx-auto" method="POST">
+            <div class="container">
+                {{ input_field(form, 'participantname', 'Your Name') }}
+                {{ input_field(form, 'participanttasks', 'Your Name') }}
+            </div>
+              {{ input_field(form, 'submit', 'Submit') }}
+        </form>
+</div
+{% include 'footer.html' %}

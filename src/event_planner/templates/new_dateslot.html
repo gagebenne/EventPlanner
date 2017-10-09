@@ -15,36 +15,14 @@
                     {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
                 {% endfor %}
             </div>
-            <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
+            {{ input_field(form, 'submit', 'Submit') }}
+            {{ input_field(form, 'copy', 'Submit and Copy') }}
         </form>
     </div>
 
 </div>
 <script>
-    $("#new").addClass('active')
-    $(".date-picker").datepicker()
-    $(".24-hour-form").hide();
-
-    $('.toggle-time-button').on('click', function(e){
-        e.preventDefault()
-        $('.24-hour-form').toggle()
-        $('.12-hour-form').toggle()
-    });
-
-    $('.timeslot-picker').selectable({
-        selected: function(event, ui){
-            $(ui.selected).addClass('active')
-            $(ui.selected).removeClass('selecting')
-            $(ui.selected).children('input').val('1')
-        },
-        unselected: function(event, ui){
-            $(ui.unselected).removeClass('active')
-            $(ui.unselected).removeClass('selecting')
-            $(ui.unselected).children('input').val('0')
-        },
-        selecting: function(event, ui){
-            $(ui.selecting).addClass('selecting')
-        }
-    });
+Window.onload = document.getElementById('date').value=""
 </script>
+<script src="/static/timeslot_picker.js"></script>
 {% include 'footer.html' %}
