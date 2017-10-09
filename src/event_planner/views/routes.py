@@ -14,6 +14,7 @@ empty_participantform = forms.ParticipantForm.default_form()
 @app.route("/")
 def index():
     """GET - Default view of all events"""
+
     events = models.Event.query.all()
 
     return render_template('index.html', events=events)
@@ -21,11 +22,12 @@ def index():
 @app.route("/new", methods=['GET'])
 def new_get():
     """GET - New event form"""
+
     return render_template('new.html', form=empty_form())
 
 @app.route("/new", methods=['POST'])
 def new_post():
-    """Creates a new event and commits it to the db"""
+    """POST - Creates a new event and commits it to the db"""
 
     form = empty_form(request.form)
 
@@ -54,9 +56,7 @@ def new_post():
             if val is True:
                 t = models.Timeslot(timeslot, dateslot)
                 db.session.add(t)
-        # for entry in form.tasks.entries:
-        #     task = models.Task(entry.data['task'], False, None, event.id)
-        #     db.session.add(task)
+
         db.session.commit()
 
         return redirect(url_for("index"))
@@ -113,12 +113,13 @@ def show_event_post(event_id=None):
 @app.route("/event/<event_id>/newtask", methods=['GET'])
 def new_task_get(event_id):
     """GET - New event task form"""
+    
     return render_template('newtask.html', form=forms.TaskForm())
 
 
 @app.route("/event/<event_id>/newtask", methods=['POST'])
 def new_task_post(event_id):
-    """Creates a new event task and commits it to the db"""
+    """POST - Creates a new event task and commits it to the db"""
 
     form = forms.TaskForm(request.form)
     if form.validate():
@@ -136,6 +137,8 @@ def new_task_post(event_id):
 
 @app.route("/event/<event_id>/respond", methods=['GET'])
 def new_response(event_id):
+    """GET - New response to event form"""
+
     event = get_event(event_id) or abort(404)
     event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
 
@@ -159,6 +162,7 @@ def new_response(event_id):
 
 @app.route("/event/<event_id>/respond", methods=['POST'])
 def create_response(event_id):
+    """POST - Save response to an event form to the database"""
 
     event = get_event(event_id)
     event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
@@ -195,6 +199,8 @@ def create_response(event_id):
 
 @app.route("/event/<event_id>/respondtask", methods=['GET'])
 def new_task_response(event_id):
+    """GET - New response to a task form"""
+
     event = get_event(event_id) or abort(404)
 
     form = forms.ParticipantTaskForm(request.form)
@@ -209,6 +215,7 @@ def new_task_response(event_id):
 
 @app.route("/event/<event_id>/respondtask", methods=['POST'])
 def create_task_response(event_id):
+    """POST - Save task-response submission to database"""
 
     event = get_event(event_id)
     form = forms.ParticipantTaskForm(request.form)
@@ -235,10 +242,13 @@ def create_task_response(event_id):
 
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):
+    """GET - Form for new dateslot for an event"""
+
     return render_template('new_dateslot.html', form=empty_dateform())
 
 @app.route("/event/<event_id>/new_dateslot", methods=['POST'])
 def create_dateslot(event_id):
+    """POST - Save new dateslot for an event to the database"""
 
     event = get_event(event_id)
     form = empty_dateform(request.form)

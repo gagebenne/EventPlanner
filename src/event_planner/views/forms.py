@@ -99,7 +99,7 @@ class EventForm(Form):
 
 class DateForm(Form):
     """
-    `Form` used for creating new `Date`s
+    `Form` used for creating new `Dateslot`s
     """
     date = DateField("date", [validate_date], format="%m/%d/%Y")
     submit = SubmitField("Submit")
@@ -110,6 +110,9 @@ class DateForm(Form):
         return with_timeslots(DateForm, timeslots)
 
 class ParticipantTaskForm(Form):
+    """
+    `Form` used for responding to `Task`s
+    """
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     participanttasks = SelectField(
         'Tasks',
@@ -119,6 +122,9 @@ class ParticipantTaskForm(Form):
     submit = SubmitField("Submit")
 
 class ParticipantForm(Form):
+    """
+    `Form` used for creating new `Participant`s
+    """
     participantname = StringField("participantname", [DataRequired(message='Participant Name cannot be empty')])
     date = DateField("date", [validate_date], format="%m/%d/%Y")
 
