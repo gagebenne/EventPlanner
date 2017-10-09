@@ -1009,41 +1009,47 @@ class Event(db.Model):
     """
     Database model for events
     """
+
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key for the database
     
     **Type:** INTEGER PRIMARY KEY
     """
+
     title = db.Column(db.Text)
     """
     The title of this event
 
     **Type:** TEXT
     """
+
     description = db.Column(db.Text)
     """
     The description of this event
 
     **Type:** TEXT
     """
-    date = db.Column(db.Date)
-    """
-    The date that this event takes place on
 
-    **Type:** DATE
-    """
     admin_link = db.Column(db.Text)
     """
     The *magic* code that authenicates the admin for this event
 
     **Type:** TEXT
     """
+
     participants = db.relationship("Participant")
     """
     Relationship to the participants of this event
 
     **Related Model:** `event_planner.models.Participant`
+    """
+
+    tasks = db.relationship("Task")
+    """
+    Relationship to the tasks of this event
+
+    **Related Model:** `event_planner.models.Task`
     """
     @property
     def admin(self):
@@ -1051,13 +1057,13 @@ class Event(db.Model):
         for participant in self.participants:
             if participant.is_admin:
                 return participant
-    def __init__(self, title, description, date):
+              
+    def __init__(self, title, description):
         """
         Creates a new `Event` instance
         """
         self.title = title
         self.description = description
-        self.date = date
         self.admin_link = "".join([random.choice(string.ascii_uppercase + string.ascii_lowercase) for i in range(16)])
 </code></pre>
   </div>
@@ -1081,41 +1087,47 @@ class Event(db.Model):
     """
     Database model for events
     """
+
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key for the database
     
     **Type:** INTEGER PRIMARY KEY
     """
+
     title = db.Column(db.Text)
     """
     The title of this event
 
     **Type:** TEXT
     """
+
     description = db.Column(db.Text)
     """
     The description of this event
 
     **Type:** TEXT
     """
-    date = db.Column(db.Date)
-    """
-    The date that this event takes place on
 
-    **Type:** DATE
-    """
     admin_link = db.Column(db.Text)
     """
     The *magic* code that authenicates the admin for this event
 
     **Type:** TEXT
     """
+
     participants = db.relationship("Participant")
     """
     Relationship to the participants of this event
 
     **Related Model:** `event_planner.models.Participant`
+    """
+
+    tasks = db.relationship("Task")
+    """
+    Relationship to the tasks of this event
+
+    **Related Model:** `event_planner.models.Task`
     """
     @property
     def admin(self):
@@ -1123,13 +1135,13 @@ class Event(db.Model):
         for participant in self.participants:
             if participant.is_admin:
                 return participant
-    def __init__(self, title, description, date):
+              
+    def __init__(self, title, description):
         """
         Creates a new `Event` instance
         """
         self.title = title
         self.description = description
-        self.date = date
         self.admin_link = "".join([random.choice(string.ascii_uppercase + string.ascii_lowercase) for i in range(16)])
 </code></pre>
   </div>
@@ -1142,7 +1154,7 @@ class Event(db.Model):
           <li><a href="#event_planner.models.Event.Event">Event</a></li>
           <li>flask_sqlalchemy.Model</li>
           <li>flask_sqlalchemy.Model</li>
-          <li>builtins.object</li>
+          <li>__builtin__.object</li>
           </ul>
           <h3>Class variables</h3>
             <div class="item">
@@ -1153,18 +1165,6 @@ class Event(db.Model):
   
     <div class="desc"><p>The <em>magic</em> code that authenicates the admin for this event</p>
 <p><strong>Type:</strong> TEXT</p></div>
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="event_planner.models.Event.Event.date" class="name">var <span class="ident">date</span></p>
-            
-
-            
-  
-    <div class="desc"><p>The date that this event takes place on</p>
-<p><strong>Type:</strong> DATE</p></div>
   <div class="source_cont">
 </div>
 
@@ -1236,6 +1236,18 @@ class Event(db.Model):
 
             </div>
             <div class="item">
+            <p id="event_planner.models.Event.Event.tasks" class="name">var <span class="ident">tasks</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Relationship to the tasks of this event</p>
+<p><strong>Related Model:</strong> <code>event_planner.models.Task</code></p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="event_planner.models.Event.Event.title" class="name">var <span class="ident">title</span></p>
             
 
@@ -1247,22 +1259,6 @@ class Event(db.Model):
 </div>
 
             </div>
-          <h3>Static methods</h3>
-            
-  <div class="item">
-    <div class="name def" id="event_planner.models.Event.Event.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, title, description, date)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Creates a new <code>Event</code> instance</p></div>
-  <div class="source_cont">
-</div>
-
-  </div>
-  
           <h3>Instance variables</h3>
             <div class="item">
             <p id="event_planner.models.Event.Event.admin" class="name">var <span class="ident">admin</span></p>
@@ -1276,16 +1272,6 @@ class Event(db.Model):
             </div>
             <div class="item">
             <p id="event_planner.models.Event.Event.admin_link" class="name">var <span class="ident">admin_link</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="event_planner.models.Event.Event.date" class="name">var <span class="ident">date</span></p>
             
 
             
@@ -1314,6 +1300,22 @@ class Event(db.Model):
 </div>
 
             </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="event_planner.models.Event.Event.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, title, description)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Creates a new <code>Event</code> instance</p></div>
+  <div class="source_cont">
+</div>
+
+  </div>
+  
       </div>
       </div>
 

@@ -1004,36 +1004,41 @@ table {
     <pre><code>from .. import db
 class Timeslot(db.Model):
     """
-    Database model for a `Participant`'s `Timeslot`s
+    Database model for a `Dateslot`'s `Timeslot`s
     """
+
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key
     
     **Type:** INTEGER PRIMARY KEY
     """
-    part_id = db.Column(db.Integer, db.ForeignKey("participant.id"))
+
+    date_id = db.Column(db.Integer, db.ForeignKey("dateslot.id"))
     """
-    The id of the `Participant` that this `Timeslot` belongs to
+    The id of the `Dateslot` that this `Timeslot` belongs to
     
     **Type:** INTEGER FOREIGN KEY
     """
+
     time = db.Column(db.Time)
     """
-    The `datetime.time` that this `Timeslot` started at
+    The `time` that this `Timeslot` started at
     
-    **Type:** TIME
+    **Type:** DATETIME
     """
-    participant = db.relationship("Participant")
+
+    dateslot = db.relationship("Dateslot")
     """
-    Relationship to the `Participant` that this `Timeslot` belongs to
+    Relationship to the `Dateslot` that this `Timeslot` belongs to
     
-    **Related Model:** `event_planner.models.Participant`
+    **Related Model:** `event_planner.models.Dateslot`
     """
-    def __init__(self, time, participant):
+
+    def __init__(self, time, dateslot):
         """Creates a new `Timeslot` instance"""
         self.time = time
-        self.participant = participant
+        self.dateslot = dateslot
 </code></pre>
   </div>
 
@@ -1048,42 +1053,47 @@ class Timeslot(db.Model):
       <p id="event_planner.models.Timeslot.Timeslot" class="name">class <span class="ident">Timeslot</span></p>
       
   
-    <div class="desc"><p>Database model for a <code>Participant</code>'s <code>Timeslot</code>s</p></div>
+    <div class="desc"><p>Database model for a <code>Dateslot</code>'s <code>Timeslot</code>s</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-event_planner.models.Timeslot.Timeslot', this);">Show source &equiv;</a></p>
   <div id="source-event_planner.models.Timeslot.Timeslot" class="source">
     <pre><code>class Timeslot(db.Model):
     """
-    Database model for a `Participant`'s `Timeslot`s
+    Database model for a `Dateslot`'s `Timeslot`s
     """
+
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key
     
     **Type:** INTEGER PRIMARY KEY
     """
-    part_id = db.Column(db.Integer, db.ForeignKey("participant.id"))
+
+    date_id = db.Column(db.Integer, db.ForeignKey("dateslot.id"))
     """
-    The id of the `Participant` that this `Timeslot` belongs to
+    The id of the `Dateslot` that this `Timeslot` belongs to
     
     **Type:** INTEGER FOREIGN KEY
     """
+
     time = db.Column(db.Time)
     """
-    The `datetime.time` that this `Timeslot` started at
+    The `time` that this `Timeslot` started at
     
-    **Type:** TIME
+    **Type:** DATETIME
     """
-    participant = db.relationship("Participant")
+
+    dateslot = db.relationship("Dateslot")
     """
-    Relationship to the `Participant` that this `Timeslot` belongs to
+    Relationship to the `Dateslot` that this `Timeslot` belongs to
     
-    **Related Model:** `event_planner.models.Participant`
+    **Related Model:** `event_planner.models.Dateslot`
     """
-    def __init__(self, time, participant):
+
+    def __init__(self, time, dateslot):
         """Creates a new `Timeslot` instance"""
         self.time = time
-        self.participant = participant
+        self.dateslot = dateslot
 </code></pre>
   </div>
 </div>
@@ -1095,9 +1105,33 @@ class Timeslot(db.Model):
           <li><a href="#event_planner.models.Timeslot.Timeslot">Timeslot</a></li>
           <li>flask_sqlalchemy.Model</li>
           <li>flask_sqlalchemy.Model</li>
-          <li>builtins.object</li>
+          <li>__builtin__.object</li>
           </ul>
           <h3>Class variables</h3>
+            <div class="item">
+            <p id="event_planner.models.Timeslot.Timeslot.date_id" class="name">var <span class="ident">date_id</span></p>
+            
+
+            
+  
+    <div class="desc"><p>The id of the <code>Dateslot</code> that this <code>Timeslot</code> belongs to</p>
+<p><strong>Type:</strong> INTEGER FOREIGN KEY</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="event_planner.models.Timeslot.Timeslot.dateslot" class="name">var <span class="ident">dateslot</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Relationship to the <code>Dateslot</code> that this <code>Timeslot</code> belongs to</p>
+<p><strong>Related Model:</strong> <code>event_planner.models.Dateslot</code></p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
             <div class="item">
             <p id="event_planner.models.Timeslot.Timeslot.id" class="name">var <span class="ident">id</span></p>
             
@@ -1116,30 +1150,6 @@ class Timeslot(db.Model):
 
             
   
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="event_planner.models.Timeslot.Timeslot.part_id" class="name">var <span class="ident">part_id</span></p>
-            
-
-            
-  
-    <div class="desc"><p>The id of the <code>Participant</code> that this <code>Timeslot</code> belongs to</p>
-<p><strong>Type:</strong> INTEGER FOREIGN KEY</p></div>
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="event_planner.models.Timeslot.Timeslot.participant" class="name">var <span class="ident">participant</span></p>
-            
-
-            
-  
-    <div class="desc"><p>Relationship to the <code>Participant</code> that this <code>Timeslot</code> belongs to</p>
-<p><strong>Related Model:</strong> <code>event_planner.models.Participant</code></p></div>
   <div class="source_cont">
 </div>
 
@@ -1170,31 +1180,15 @@ class Timeslot(db.Model):
 
             
   
-    <div class="desc"><p>The <code>datetime.time</code> that this <code>Timeslot</code> started at</p>
-<p><strong>Type:</strong> TIME</p></div>
+    <div class="desc"><p>The <code>time</code> that this <code>Timeslot</code> started at</p>
+<p><strong>Type:</strong> DATETIME</p></div>
   <div class="source_cont">
 </div>
 
             </div>
-          <h3>Static methods</h3>
-            
-  <div class="item">
-    <div class="name def" id="event_planner.models.Timeslot.Timeslot.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, time, participant)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Creates a new <code>Timeslot</code> instance</p></div>
-  <div class="source_cont">
-</div>
-
-  </div>
-  
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="event_planner.models.Timeslot.Timeslot.participant" class="name">var <span class="ident">participant</span></p>
+            <p id="event_planner.models.Timeslot.Timeslot.dateslot" class="name">var <span class="ident">dateslot</span></p>
             
 
             
@@ -1213,6 +1207,22 @@ class Timeslot(db.Model):
 </div>
 
             </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="event_planner.models.Timeslot.Timeslot.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, time, dateslot)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Creates a new <code>Timeslot</code> instance</p></div>
+  <div class="source_cont">
+</div>
+
+  </div>
+  
       </div>
       </div>
 

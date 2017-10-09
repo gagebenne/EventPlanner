@@ -1006,42 +1006,56 @@ class Participant(db.Model):
     """
     Database model for participants
     """
+    
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key for the database
 
     **Type:** INTEGER PRIMARY KEY
     """
+
     event_id = db.Column(db.Integer, db.ForeignKey("event.id"))
     """
     The key of the `Event` that this `Participant` belongs to
 
     **Type:** INTEGER FOREIGN KEY
     """
+
     event = db.relationship("Event")
     """
     The `Event` that this `Participant` belongs to
 
     **Related Model:** `event_planner.models.Event`
     """
+
     name = db.Column(db.Text)
     """
     The name of this `Participant`
 
     **Type:** TEXT
     """
-    timeslots = db.relationship("Timeslot")
-    """
-    The `Timeslot`s that belong to this `Participant`
 
-    **Related Models:** `event_planner.models.Timeslot`
+    dateslots = db.relationship("Dateslot")
     """
+    The `Dateslot`s that belong to this `Participant`
+
+    **Related Models:** `event_planner.models.Dateslot`
+    """
+
+    tasks = db.relationship("Task")
+    """
+    The `Task`s that belong to this `Participant`
+
+    **Related Models:** `event_planner.models.Task`
+    """
+
     is_admin = db.Column(db.Boolean)
     """
     Whether or not this `Participant` is an admin for its `Event`
 
     **Type:** BOOLEAN
     """
+
     def __init__(self, name, event, is_admin):
         """
         Creates a new `Participant` instance
@@ -1071,42 +1085,56 @@ class Participant(db.Model):
     """
     Database model for participants
     """
+    
     id = db.Column(db.Integer, primary_key=True)
     """
     The primary key for the database
 
     **Type:** INTEGER PRIMARY KEY
     """
+
     event_id = db.Column(db.Integer, db.ForeignKey("event.id"))
     """
     The key of the `Event` that this `Participant` belongs to
 
     **Type:** INTEGER FOREIGN KEY
     """
+
     event = db.relationship("Event")
     """
     The `Event` that this `Participant` belongs to
 
     **Related Model:** `event_planner.models.Event`
     """
+
     name = db.Column(db.Text)
     """
     The name of this `Participant`
 
     **Type:** TEXT
     """
-    timeslots = db.relationship("Timeslot")
-    """
-    The `Timeslot`s that belong to this `Participant`
 
-    **Related Models:** `event_planner.models.Timeslot`
+    dateslots = db.relationship("Dateslot")
     """
+    The `Dateslot`s that belong to this `Participant`
+
+    **Related Models:** `event_planner.models.Dateslot`
+    """
+
+    tasks = db.relationship("Task")
+    """
+    The `Task`s that belong to this `Participant`
+
+    **Related Models:** `event_planner.models.Task`
+    """
+
     is_admin = db.Column(db.Boolean)
     """
     Whether or not this `Participant` is an admin for its `Event`
 
     **Type:** BOOLEAN
     """
+
     def __init__(self, name, event, is_admin):
         """
         Creates a new `Participant` instance
@@ -1125,9 +1153,21 @@ class Participant(db.Model):
           <li><a href="#event_planner.models.Participant.Participant">Participant</a></li>
           <li>flask_sqlalchemy.Model</li>
           <li>flask_sqlalchemy.Model</li>
-          <li>builtins.object</li>
+          <li>__builtin__.object</li>
           </ul>
           <h3>Class variables</h3>
+            <div class="item">
+            <p id="event_planner.models.Participant.Participant.dateslots" class="name">var <span class="ident">dateslots</span></p>
+            
+
+            
+  
+    <div class="desc"><p>The <code>Dateslot</code>s that belong to this <code>Participant</code></p>
+<p><strong>Related Models:</strong> <code>event_planner.models.Dateslot</code></p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
             <div class="item">
             <p id="event_planner.models.Participant.Participant.event" class="name">var <span class="ident">event</span></p>
             
@@ -1219,33 +1259,17 @@ class Participant(db.Model):
 
             </div>
             <div class="item">
-            <p id="event_planner.models.Participant.Participant.timeslots" class="name">var <span class="ident">timeslots</span></p>
+            <p id="event_planner.models.Participant.Participant.tasks" class="name">var <span class="ident">tasks</span></p>
             
 
             
   
-    <div class="desc"><p>The <code>Timeslot</code>s that belong to this <code>Participant</code></p>
-<p><strong>Related Models:</strong> <code>event_planner.models.Timeslot</code></p></div>
+    <div class="desc"><p>The <code>Task</code>s that belong to this <code>Participant</code></p>
+<p><strong>Related Models:</strong> <code>event_planner.models.Task</code></p></div>
   <div class="source_cont">
 </div>
 
             </div>
-          <h3>Static methods</h3>
-            
-  <div class="item">
-    <div class="name def" id="event_planner.models.Participant.Participant.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, event, is_admin)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Creates a new <code>Participant</code> instance</p></div>
-  <div class="source_cont">
-</div>
-
-  </div>
-  
           <h3>Instance variables</h3>
             <div class="item">
             <p id="event_planner.models.Participant.Participant.event" class="name">var <span class="ident">event</span></p>
@@ -1277,6 +1301,22 @@ class Participant(db.Model):
 </div>
 
             </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="event_planner.models.Participant.Participant.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, event, is_admin)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Creates a new <code>Participant</code> instance</p></div>
+  <div class="source_cont">
+</div>
+
+  </div>
+  
       </div>
       </div>
 

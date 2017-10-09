@@ -51,7 +51,7 @@ class Task(db.Model):
     """
     Relationship to the `Event` that this `Task` belongs to
     
-    **Related Model:** `event_planner.models.Participant`
+    **Related Model:** `event_planner.models.Event`
     """
     
     def __init__(self, task, is_assigned, part_id, event_id):
