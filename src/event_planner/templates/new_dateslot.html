@@ -15,10 +15,14 @@
                     {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
                 {% endfor %}
             </div>
-            <input type="submit" value="Submit" class="btn btn-lg btn-primary my-3 float-right">
+            {{ input_field(form, 'submit', 'Submit') }}
+            {{ input_field(form, 'copy', 'Submit and Copy') }}
         </form>
     </div>
 
 </div>
+<script>
+Window.onload = document.getElementById('date').value=""
+</script>
 <script src="/static/timeslot_picker.js"></script>
 {% include 'footer.html' %}

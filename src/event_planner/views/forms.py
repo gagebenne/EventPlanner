@@ -142,6 +142,8 @@ class DateForm(Form):
     `Form` used for creating new `Date`s
     """
     date = DateField("date", [validate_date], format="%m/%d/%Y")
+    submit = SubmitField("Submit")
+    copy = SubmitField("Submit and Copy")
 
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
