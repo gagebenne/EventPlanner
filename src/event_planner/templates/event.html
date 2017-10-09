@@ -17,11 +17,12 @@
       <h5>Tasks</h5>
 	  	{% if event.tasks %}
 	      {% for t in event.tasks %}
-		  	{% if t.is_assigned %}
-	        	<p class=claimed>{{ t.task }}: {{ t.participant.name }}</p>
-			{% else %}
-				<p class="unclaimed">{{t.task}}: Unclaimed</p>
-			{% endif %}
+	        <p>{{ t.task }}:
+              {% if t.participant.name == "" %}
+                  Anonymous
+              {% else %}
+                  {{ t.participant.name if t.is_assigned else "Unclaimed"}}</p>
+              {% endif %}
 	      {% endfor %}
 		  {% else %}
 			  <p>There are no tasks for this event</p>

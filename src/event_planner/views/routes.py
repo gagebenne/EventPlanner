@@ -216,7 +216,7 @@ def create_task_response(event_id):
     form = forms.ParticipantTaskForm(request.form)
 
 
-    if True: #form.validate()
+    if form.participantname.data != "": #form.validate()
         participant = models.Participant(
             form.participantname.data,
             event,
@@ -224,7 +224,7 @@ def create_task_response(event_id):
         )
         db.session.add(participant)
         db.session.flush()
-
+        
         task = models.Task.query.filter_by(event_id = event_id, id=form.participanttasks.data).first()
         task.part_id = participant.id
         task.is_assigned = True
@@ -233,7 +233,7 @@ def create_task_response(event_id):
 
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("respondtask.html", form=form, event=event), 400
+        return redirect(url_for('show_event_get', event_id=event_id))
 
 @app.route("/event/<event_id>/new_dateslot", methods=['GET'])
 def new_res(event_id):
