@@ -221,7 +221,6 @@ def create_dateslot(event_id):
     admin = event.admin
 
     if form.validate():
-
         dateslot = models.Dateslot(
             form.date.data,
             admin
@@ -234,8 +233,11 @@ def create_dateslot(event_id):
                 t = models.Timeslot(timeslot, dateslot)
                 db.session.add(t)
         db.session.commit()
-
-        return redirect(url_for("index"))
+        
+        if form.submit.data:
+            return redirect(url_for("index"))
+        else:
+            return render_template("new_dateslot.html", form=form), 400
     else:
         return render_template("new_dateslot.html", form=form), 400
 
