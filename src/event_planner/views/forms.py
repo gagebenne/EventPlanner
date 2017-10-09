@@ -95,25 +95,12 @@ class EventForm(Form):
     @staticmethod
     def default_form(timeslots=utils.all_timeslots()):
         return with_timeslots(EventForm, timeslots)
-
-def unique_date(form, field):
-    """
-    Validator that checks for uniqueness among dates for a specific event
-    :return: Raises a ValidationError if a Dateslot for the same event with the same date already exists.
-    """
-    part_id = 1 #If we can figure out the part_id of the thing we're validating, we can use the commented out method
-    #dateslots = models.Dateslot.query.filter(models.Dateslot.part_id == part_id).all()
-    dateslots = models.Dateslot.query.all()
-    for dateslot in dateslots:
-        db_date = dateslot.date
-        if db_date == field.data:
-            raise ValidationError('Duplicate date for this event')
     
 class DateForm(Form):
     """
     `Form` used for creating new `Dateslot`s
     """
-    date = DateField("date", [validate_date, unique_date], format="%m/%d/%Y")
+    date = DateField("date", [validate_date], format="%m/%d/%Y")
     submit = SubmitField("Submit")
     copy = SubmitField("Submit and Copy")
 
