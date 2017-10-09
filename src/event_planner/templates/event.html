@@ -24,10 +24,10 @@
 		  {% endif %}
     </div>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/newtask">Add Task</a>
-	  {% if event.tasks %}
-		  <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respondtask">Claim Task</a>
-	  {% endif %}
-	  <br>
+	{% if (event.tasks and open_task) %}
+		<a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respondtask">Claim Task</a>
+	{% endif %}
+	<br>
     <a class="btn btn-outline-info col-sm-4 join my-4" href="/event/{{ event['id'] }}/respond">Join Event</a>
 </div>
 
