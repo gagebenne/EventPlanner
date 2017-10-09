@@ -7,16 +7,12 @@
         <form class="col-sm-10 mx-auto" method="POST">
             <div class="container">
                 {{ input_field(form, 'participantname', 'Your Name') }}
-                <!-- <div class="timeslot-picker"> -->
-                    {% for dateslot in event_dateslots %}
-						<div class="date">
-	                        <h5><strong>{{ dateslot.date }}</strong></h5>
-							<div class="timeslot-picker">
-	                        {% for timeslot in dateslot.timeslots %}
-	                            {{ form["slot_%s" % timeslot.time.strftime("%H%M")]()|safe }}
-	                        {% endfor %}
-							</div>
-						</div>
+                <button class="btn btn-info toggle-time-button my-3 btn-sm">Toggle time format</button>
+                <p>Time slots are 30 minutes long and begin at indicated time.</p>
+                <p>Hold Ctrl or Command(Mac) to select multiple time slots.</p>
+                <div class="timeslot-picker">
+                    {% for timeslot in form.timeslots %}
+                        {{ form["slot_%s" % timeslot.strftime("%H%M")]()|safe }}
                     {% endfor %}
                 <!-- </div> -->
           </div>

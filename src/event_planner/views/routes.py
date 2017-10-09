@@ -2,6 +2,7 @@ from .. import db, models, app
 from flask import flash, redirect, abort, render_template, url_for, request
 from datetime import date as dt, time
 from datetime import datetime
+from dateutil import parser
 from .. import utils
 from . import forms
 from functools import reduce
@@ -78,12 +79,13 @@ def show_event_get(event_id):
     for t in event_tasks:
         if not t.participant:
             open_task= True
+
     participants = list(event.participants)
 
-    form_type = forms.ParticipantForm.default_form(event_dateslots_times)
+    form_type = forms.ParticipantForm.default_form(event_times)
     form = form_type()
 
-    return render_template('event_view.html', form=form, event=event, admin=event_admin, participants=participants, event_dateslots=event_dateslots, event_timeslots_times=event_dateslots_times)
+    return render_template('event_view.html', form=form, event=event, admin=event_admin, participants=participants, event_dateslots=event_dateslots)
 
 
 @app.route("/event/<event_id>", methods=['POST'])
@@ -103,7 +105,6 @@ def show_event_post(event_id=None):
 
         for slot in form.timeslots:
              val = form["slot_%s" % slot.strftime("%H%M")].data[0]
-
              if val is True:
                 t = models.Timeslot(slot, participant)
                 db.session.add(t)
@@ -145,23 +146,47 @@ def new_response(event_id):
 
     event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
 
-    return render_template('respond.html', form=empty_participantform(), event_dateslots=event_dateslots)
+    date = request.args.get('date')
+
+    if 'date' in locals() and date != None:
+
+        specific_dateslots = filter((lambda x : x.date == parser.parse(request.args.get('date')).date()), event_dateslots)
+        date_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), specific_dateslots), [])
+        event_times = map((lambda x : x.time), date_timeslots)
+
+        form_type = forms.ParticipantForm.default_form(event_times)
+        form = form_type()
+
+        return render_template('respond.html', form=form, event_timeslots=date_timeslots, date=date)
+    else:
+        return render_template('respond_dates.html', event=event, dateslots=event_dateslots)
+
 
 @app.route("/event/<event_id>/respond", methods=['POST'])
 def create_response(event_id):
 
     event = get_event(event_id)
-    form = forms.ParticipantForm(request.form)
+    event_admin = list(filter(lambda x: x.is_admin == True, event.participants))
 
-    if form.validate():
+    event_dateslots = filter((lambda d : d.timeslots ), event_admin[0].dateslots)
+    event_timeslots = reduce((lambda x,y : x + y), map((lambda x : x.timeslots), event_dateslots), [])
+    event_times = map((lambda x : x.time), event_timeslots)
+
+    form_type = forms.ParticipantForm.default_form(event_times)
+    form = form_type(request.form)
+
+    if True:
+        participant = models.Participant(form.participantname.data, event, False)
+
         dateslot = models.Dateslot(
-            form.date.data,
-            admin
+            parser.parse(request.args.get('date')).date(),
+            participant
         )
         db.session.add(dateslot)
 
         for timeslot in form.timeslots:
-            val = form["slot_%s" % timeslot.strftime("%H%M")].data[0]
+            form_time = form["slot_%s" % timeslot.strftime("%H%M")].data + [False]
+            val = form_time[0]
             if val is True:
                 t = models.Timeslot(timeslot, dateslot)
                 db.session.add(t)
@@ -171,7 +196,7 @@ def create_response(event_id):
 
         return redirect(url_for('show_event_get', event_id=event_id))
     else:
-        return render_template("respond.html", form=form, event=event), 400
+        return render_template("respond.html", form=form, event=event,  event_timeslots=event_timeslots, dateslots=event_dateslots), 400
 
 @app.route("/event/<event_id>/respondtask", methods=['GET'])
 def new_task_response(event_id):
