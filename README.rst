@@ -91,7 +91,7 @@ Implementation
 
 Expansion
 ==============
-On this fork, we have implemented the following features, in addition to everything on the original repo:
+* On this fork, we have implemented the following features, in addition to everything on the original repo:
 * It is now possible to create events with multiple dates.
 * When adding a new day, it is possible to create multiple in a row with the same timeslots.
 * Tasks are now implemented. Admins can create tasks for their events and participants can sign up for unassigned tasks.
