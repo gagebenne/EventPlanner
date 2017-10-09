@@ -73,7 +73,7 @@
 	border-radius: 5px;
     background: white;
     width: auto;
-    margin: 0px auto;
+    margin: 2px auto;
 }
 
 
@@ -142,4 +142,12 @@
 
 .participanttable{
     padding: 0 2%;
+}
+
+p.claimed{
+	background-color: #B1CBBA;
+}
+
+p.unclaimed{
+	background-color: #EDC4C5;
 }
