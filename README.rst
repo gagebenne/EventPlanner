@@ -29,7 +29,7 @@ MVC Pattern
             * part_id: *integer, foreign key*
             * timeslot: *datetime*
     * tasks
-        *Fields
+        * Fields
             * part_id: *integer, foreign key*
             * task: *string*
 * Views
